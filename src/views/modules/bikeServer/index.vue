@@ -60,22 +60,31 @@ export default {
           align: 'center',
           // width: '200',
           label: '状态',
-          // slotFormItem: {
-          //   render: (h, params) => {
-          //     const { rowData } = params
-          //     console.log(rowData)
-
-          //     return h('div', [
-          //       h('el-select', {
-          //         props: {
-          //           size: 'small',
-          //           placeholder: `请输入${rowData.label}`
-          //         }
-          //       })
-          //     ])
-          //   }
-          // },
           slot: true,
+          slotFormItem: {
+            render: (h, params) => {
+              return h('el-radio-group', {
+                props: {
+                  value: params.rowData + ''
+                },
+                on: {
+                  input: (e) => {
+                    this.$refs['bike-server-list'].$refs['addOrUpdate'].dataForm = {
+                      ...this.$refs['bike-server-list'].$refs['addOrUpdate'].dataForm,
+                      status: e   // 与对应的prop一样
+                    }
+                  }
+                }
+              }, Object.keys(statusOption).map(a => (
+                h('el-radio', {
+                  props: {
+                    label: a,
+                    value: statusOption[a].value
+                  }
+                }, statusOption[a].label)))
+              )
+            }
+          },
           render: (h, params) => {
             const { rowData } = params
             const { status } = rowData

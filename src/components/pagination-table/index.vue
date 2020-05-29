@@ -140,9 +140,9 @@ export default {
 
     this.formItems = this.tableColumns.filter(a => a.label !== 'ID').map(a => ({
       label: a.label,
-      prop: a.prop
-      // slot: a.slot,
-      // slotFormItem: a.slotFormItem
+      prop: a.prop,
+      slot: a.slot,
+      slotFormItem: a.slotFormItem
     }))
 
     this.rowIdName = this.tableColumns.find(a => a.label === 'ID').prop

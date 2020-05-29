@@ -6,7 +6,7 @@
     :visible.sync="visible">
     <el-form :model="dataForm" class="add-or-update-form" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
       <el-form-item v-for="(a,i) in formItems" :key="i" :label="a.label" :prop="a.prop">
-        <render-slot v-if="a.slot" :render="a.slotFormItem.render" :rowData="a"></render-slot>
+        <render-slot v-if="a.slot" :render="a.slotFormItem.render" :rowData="dataForm[a.prop]"></render-slot>
         <el-input v-else v-model="dataForm[a.prop]" :placeholder="`请输入${a.label}`"></el-input>
       </el-form-item>
     </el-form>
