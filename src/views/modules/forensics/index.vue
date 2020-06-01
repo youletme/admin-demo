@@ -38,12 +38,24 @@
         <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
       </span>
     </el-dialog>
+
+    <show-detail
+      :detailData="detailData"
+      :detailFormItems="detailFormItems"
+      ref="show-detail"
+    >
+
+    </show-detail>
+
+    <div class="demo-image__preview">
+</div>
     
   </div>
 </template>
 
 <script>
 import PaginationTable from '@/components/pagination-table'
+import ShowDetail from '@/components/show-detail'
 import { allStatusOption } from '@/enum/index'
 export default {
   data () {
@@ -52,10 +64,6 @@ export default {
       dataForm: {
         name: ''
       },
-      driverOptions: [{
-        label: '测试司机',
-        value: 5
-      }],
       tableColumns: [
         {
           prop: 'id',
@@ -63,44 +71,54 @@ export default {
           align: 'center',
           width: '60',
           label: 'ID',
-          slot: false
+          notInForm: true
         },
         {
           prop: 'order_number',
           headerAalign: 'center',
           align: 'center',
           width: '250',
-          label: '取证单号',
-          slot: false
+          label: '取证单号'
         },
         {
           prop: 'position',
           headerAalign: 'center',
           align: 'center',
           width: '250',
-          label: '取证地点',
-          slot: false
+          label: '取证地点'
+        },
+        {
+          prop: 'longitude',
+          headerAalign: 'center',
+          align: 'center',
+          width: '100',
+          label: '取证点经度'
+        },
+        {
+          prop: 'latitudes',
+          headerAalign: 'center',
+          align: 'center',
+          width: '100',
+          label: '取证点维度'
         },
         {
           prop: 'evidence_user_name',
           headerAalign: 'center',
           align: 'center',
-          label: '取证人员',
-          slot: false
+          width: '100',
+          label: '取证人员'
         },
         {
           prop: 'driver_user_name',
           headerAalign: 'center',
           align: 'center',
-          label: '指派司机',
-          slot: false
+          label: '指派司机'
         },
         {
           prop: 'status',
           headerAalign: 'center',
           align: 'center',
           label: '状态',
-          slot: true,
           render: (h, params) => {
             const { rowData } = params
             const { status } = rowData
@@ -125,16 +143,28 @@ export default {
           headerAalign: 'center',
           align: 'center',
           width: '180',
-          label: '创建时间',
-          slot: false
+          label: '取证时间',
+          notInForm: true
         }
       ],
       rowOperate: {
-        slot: true,
         render: (h, params) => {
           const { rowData } = params
 
-          return h('div', [
+          return h('div', {
+            style: {
+              display: 'inline-block'
+            }
+          }, [
+            h('el-button', {
+              props: {
+                size: 'small',
+                type: 'text'
+              },
+              on: {
+                click: () => this.showDetail(rowData)
+              }
+            }, '详情'),
             h('el-button', {
               props: {
                 size: 'small',
@@ -147,11 +177,16 @@ export default {
             }, '指派')
           ])
         }
-      }
+      },
+      driverOptions: [],
+      detailData: {},
+      detailFormItems: [],
+      bicycleProviderList: []
     }
   },
   components: {
-    PaginationTable
+    PaginationTable,
+    ShowDetail
   },
   async mounted () {
     let json = await this.$http({
@@ -166,8 +201,19 @@ export default {
         label: a.username,
         value: a.userId
       }))
-    } else {
+    }
 
+    let bicycleProviderList = await this.$http({
+      url: this.$http.adornUrl('/sys/bicycleProvider/list'),
+      method: 'get'
+    })
+    const { data: bikeList } = bicycleProviderList
+    if (bikeList && bikeList.code === 0) {
+      const { records } = bikeList.data
+      this.bicycleProviderList = records.map(a => ({
+        bicycleProviderId: a.bicycleProviderId,
+        name: a.name
+      }))
     }
   },
   methods: {
@@ -176,7 +222,6 @@ export default {
       this.chooseData = [data]
     },
     assignDrivers () {
-      // this.visible = true
       let chooseDatas = this.$refs['driver-delivery-note-list'].dataListSelections
       if (!chooseDatas.length) {
         this.$message('请至少选择一条数据')
@@ -185,6 +230,69 @@ export default {
 
       this.visible = true
       this.chooseData = chooseDatas
+    },
+    showDetail (data) {
+      this.detailData = data
+      this.$refs['show-detail'].dataForm = data
+      this.$refs['show-detail'].visible = true
+
+      this.detailFormItems = [{
+        label: '取证单号',
+        prop: 'order_number'
+      }, {
+        label: '司机',
+        prop: 'driver_user_name'
+      }, {
+        label: '取证员',
+        prop: 'evidence_user_name'
+      }, {
+        label: '单车服务商',
+        prop: 'bicycle_provider_ids',
+        render: (h, params) => {
+          const { rowData } = params
+          const ids = rowData.split(',')
+
+          return h('div',
+            ids.map(a => this.bicycleProviderList
+            .find(b => b.bicycleProviderId.toString() === a))
+            .map(a => h('el-tag', {style: 'margin-right:10px'}, a.name))
+          )
+        }
+      }, {
+        label: '取证照片',
+        prop: 'evidence_photo',
+        render: (h, params) => {
+          return this.renderImage(h, params)
+        }
+      }, {
+        label: '清运前照片',
+        prop: 'clear_photo_before',
+        render: (h, params) => {
+          return this.renderImage(h, params)
+        }
+      }, {
+        label: '清运后照片',
+        prop: 'clear_photo_after',
+        render: (h, params) => {
+          return this.renderImage(h, params)
+        }
+      }, {
+        label: '地点',
+        prop: 'position'
+      }, {
+        label: '状态',
+        prop: 'status',
+        render: (h, params) => {
+          const { rowData } = params
+          return h('el-tag', {style: 'margin-right:10px'}, allStatusOption[rowData])
+        }
+      }, {
+        label: '备注',
+        prop: 'remark'
+      }, {
+        label: '创建时间',
+        prop: 'create_time'
+      }]
     },
     async dataFormSubmit () {
       const { driverId } = this.dataForm
@@ -197,24 +305,28 @@ export default {
         })
       }))))
 
-      // let json = await this.$http({
-      //   url: this.$http.adornUrl('/sys/evidence/distributionDriver'),
-      //   method: 'post',
-      //   data: this.$http.adornData({
-      //     id, driverUserId: driverId// 司机id
-      //   })
-      // })
-      // const { data } = json
       if (json.every(a => a.data.code === 0)) {
         this.visible = false
         this.$refs['driver-delivery-note-list'].getDataList()
       } else {
-        console.log(json)
-
         this.$message(json.find(a => a.data.code !== 0).data.msg)
       }
-    }
+    },
+    renderImage: (h, params) => {
+      const { rowData } = params
+      const imgs = (rowData || '').split(',')
 
+      return h('el-image', {
+        style: {
+          width: '100px',
+          height: '100px'
+        },
+        props: {
+          src: `${imgs[0]}?x-oss-process=image/resize,m_pad,h_100,w_100`,
+          'preview-src-list': imgs
+        }
+      })
+    }
   }
 }
 </script>

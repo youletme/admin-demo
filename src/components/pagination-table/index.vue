@@ -13,7 +13,6 @@
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
       <el-table-column
-        v-if="!onlyCanSaveAndChange"
         type="selection"
         header-align="center"
         align="center"
@@ -27,7 +26,7 @@
         :label="a.label"                  
       >
         <template slot-scope="scope">
-          <render-slot v-if="a.slot" :render="a.render" :rowData="scope.row"></render-slot>
+          <render-slot v-if="a.render" :render="a.render" :rowData="scope.row"></render-slot>
           <span v-else>{{ scope.row[a.prop] }}</span>
         </template>
       </el-table-column>
@@ -39,11 +38,11 @@
         label="操作"
       >
         <template slot-scope="scope">
+          <render-slot v-if="rowOperate" :render="rowOperate.render" :rowData="scope.row"></render-slot>
+
           <el-button v-if="isAuth('sys:user:update')&&useDefultOperate" type="text" size="small" @click="addOrUpdateHandle(scope.row[rowIdName])">修改</el-button>
           <el-button v-if="isAuth('sys:user:delete')&&useDefultOperate" type="text" size="small" @click="deleteHandle(scope.row[rowIdName])">删除</el-button>
-          <el-button v-if="isAuth('sys:user:update')&&onlyCanSaveAndChange" type="text" size="small" @click="addOrUpdateHandle(scope.row[rowIdName])">修改</el-button>
-          
-          <render-slot v-if="rowOperate.slot" :render="rowOperate.render" :rowData="scope.row"></render-slot>
+          <el-button v-if="isAuth('sys:user:update')&&onlyCanSaveAndChange" type="text" size="small" @click="addOrUpdateHandle(scope.row[rowIdName])">修改</el-button> 
         </template>
       </el-table-column>
 
@@ -66,8 +65,9 @@
       :getFormDateUrl="getFormDateUrl"
       :saveOrUpdateUrl="saveOrUpdateUrl"
       :width="addOrUpdateDialogWidth"
-      :dataForm="dataForm"
     ></add-or-update>
+
+    
   </div>
 </template>
 
@@ -101,13 +101,7 @@ export default {
       default: false
     },
     rowOperate: {
-      type: Object,
-      default: () => {
-        return {
-          slot: false,
-          render: undefined
-        }
-      }
+      type: null
     },
     addOrUpdateDialogWidth: {
       type: String,
@@ -136,16 +130,18 @@ export default {
     AddOrUpdate
   },
   created () {
-    console.log(this.tableColumns)
-
-    this.formItems = this.tableColumns.filter(a => a.label !== 'ID').map(a => ({
+    this.formItems = this.tableColumns.filter(a => !a.notInForm).map(a => ({
       label: a.label,
       prop: a.prop,
-      slot: a.slot,
       slotFormItem: a.slotFormItem
     }))
 
-    this.rowIdName = this.tableColumns.find(a => a.label === 'ID').prop
+    if (this.tableColumns.find(a => a.label === 'ID')) {
+      this.rowIdName = this.tableColumns.find(a => a.label === 'ID').prop
+    } else {
+      console.log('tableColumn must has ID for label')
+    }
+
     let obj = {}
     this.formItems.forEach(a => {
       obj = {...obj, ...{[a.prop]: ''}}
@@ -205,12 +201,15 @@ export default {
         this.$refs.addOrUpdate.init(id)
       })
     },
+    showDetail (data) {
+      console.log(data)
+    },
     // 删除
     deleteHandle (id) {
-      let userIds = id ? [id] : this.dataListSelections.map(item => {
+      let ids = id ? [id] : this.dataListSelections.map(item => {
         return item.userId
       })
-      this.$confirm(`确定对[id=${userIds.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
+      this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -218,7 +217,7 @@ export default {
         this.$http({
           url: this.$http.adornUrl(this.deleteUrl),
           method: 'post',
-          data: this.$http.adornData(userIds, false)
+          data: this.$http.adornData(ids, false)
         }).then(({data}) => {
           if (data && data.code === 0) {
             this.$message({

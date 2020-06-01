@@ -3,7 +3,9 @@ export default {
   functional: true,
   props: {
     render: Function,
-    rowData: Object
+    rowData: {
+      type: null
+    }
   },
   render: (h, ctx) => {
     const params = {

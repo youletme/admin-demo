@@ -1,11 +1,11 @@
 <template>
   <div>
     <pagination-table 
-      ref="bike-server-list"
+      ref="warehouse-list"
       :table-columns='tableColumns'
-      :get-list-url="'/sys/deliver/list'"
-      :delete-url="'/sys/user/delete'"
-      :useDefultOperate="false"
+      :get-list-url="'/sys/warehouse/list'"
+      :delete-url="''"
+      :useDefultOperate="true"
       :addOrUpdateDialogWidth="'30%'"
       :onlyCanSaveAndChange="false"
     >
@@ -29,28 +29,37 @@ export default {
           label: 'ID',
           notInForm: true
         }, {
-          prop: 'orderNumber',
+          prop: 'number',
           headerAlign: 'center',
           align: 'center',
-          width: '200',
-          label: '交付单号'
+          width: '100',
+          label: '仓库编号'
         }, {
-          prop: 'evidenceOrderNumbers',
+          prop: 'name',
           headerAlign: 'center',
           align: 'center',
-          width: '400',
-          label: '取证单号'
+          label: '仓库名称'
         }, {
-          prop: 'driverUserName',
+          prop: 'address',
           headerAlign: 'center',
           align: 'center',
-          label: '指派司机'
+          label: '仓库地址'
         }, {
-          prop: 'guardUserName',
+          prop: 'longitude',
           headerAlign: 'center',
           align: 'center',
-          // width: '200',
-          label: '门卫账号'
+          label: '经度'
+        }, {
+          prop: 'latitudes',
+          headerAlign: 'center',
+          align: 'center',
+          label: '纬度'
+        }, {
+          prop: 'createTime',
+          headerAlign: 'center',
+          align: 'center',
+          label: '创建时间',
+          notInForm: true
         }
       ]
 

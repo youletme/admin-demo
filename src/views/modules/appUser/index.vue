@@ -1,14 +1,14 @@
 <template>
   <div>
     <pagination-table 
-      ref="bike-server-list" 
+      ref="app-user-list"
       :table-columns='tableColumns'
-      :get-list-url="'/sys/bicycleProvider/list'"
-      :delete-url="'/sys/user/delete'"
+      :get-list-url="'/sys/businessUser/list'"
+      :saveOrUpdateUrl="'/sys/businessUser'"
+      :getFormDateUrl="'/sys/businessUser/view'"
+      :delete-url="''"
       :useDefultOperate="false"
-      :addOrUpdateDialogWidth="'30%'"
-      :saveOrUpdateUrl="'/sys/bicycleProvider'"
-      :getFormDateUrl="'/sys/bicycleProvider/view'"
+      :addOrUpdateDialogWidth="'40%'"
       :onlyCanSaveAndChange="true"
     >
 
@@ -18,49 +18,43 @@
 
 <script>
 import PaginationTable from '@/components/pagination-table'
-
-const statusOption = [
-  {
-    label: '停用',
-    type: 'info',
-    value: 0
-  },
-  {
-    label: '正常',
-    type: 'success',
-    value: 1
-  }
-]
+const userOption = [{
+  value: 1,
+  label: '取证员'
+}, {
+  value: 2,
+  label: '单车服务商'
+}, {
+  value: 3,
+  label: '司机'
+}, {
+  value: 4,
+  label: '门卫'
+}]
 
 export default {
   data () {
     return {
       tableColumns: [
         {
-          prop: 'bicycleProviderId',
+          prop: 'userId',
           headerAlign: 'center',
           align: 'center',
           width: '80',
           label: 'ID',
           notInForm: true
         }, {
-          prop: 'name',
+          prop: 'username',
           headerAlign: 'center',
           align: 'center',
-          width: '400',
-          label: '服务商品牌'
+          width: '300',
+          label: '登录名'
         }, {
-          prop: 'mobile',
+          prop: 'type',
           headerAlign: 'center',
           align: 'center',
-          // width: '200',
-          label: '联系电话'
-        }, {
-          prop: 'status',
-          headerAlign: 'center',
-          align: 'center',
-          // width: '200',
-          label: '状态',
+          width: '200',
+          label: '用户类型',
           slotFormItem: {
             render: (h, params) => {
               return h('el-radio-group', {
@@ -69,13 +63,12 @@ export default {
                 },
                 on: {
                   input: (e) => {
-                    this.$refs['bike-server-list'].$refs['addOrUpdate'].dataForm = {
-                      ...this.$refs['bike-server-list'].$refs['addOrUpdate'].dataForm,
-                      status: e   // 与对应的prop一样
-                    }
+                    console.log(e)
+
+                    this.$refs['app-user-list'].$refs['addOrUpdate'].dataForm.type = e
                   }
                 }
-              }, statusOption.map(a => (
+              }, userOption.map((a, i) => (
                 h('el-radio', {
                   props: {
                     label: a.value,
@@ -87,19 +80,25 @@ export default {
           },
           render: (h, params) => {
             const { rowData } = params
-            const { status } = rowData
+            const { type } = rowData
 
             return h('div', [
               h('el-tag', {
                 props: {
-                  size: 'small',
-                  type: statusOption[status].type
+                  size: 'small'
                 }
-              }, statusOption[status].label)
+              }, userOption.find(a => a.value === type).label)
             ])
           }
+        }, {
+          prop: 'createTime',
+          headerAlign: 'center',
+          align: 'center',
+          label: '创建时间',
+          notInForm: true
         }
       ]
+
     }
   },
   components: {

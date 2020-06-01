@@ -1,12 +1,13 @@
 <template>
   <el-dialog
-    :title="JSON.stringify(dataForm) ==='{}' ? '新增' : '修改'"
+    :title="dataForm.id === 0 ? '新增' : '修改'"
     :close-on-click-modal="false"
     :width="width"
-    :visible.sync="visible">
+    :visible.sync="visible"
+  >
     <el-form :model="dataForm" class="add-or-update-form" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
       <el-form-item v-for="(a,i) in formItems" :key="i" :label="a.label" :prop="a.prop">
-        <render-slot v-if="a.slot" :render="a.slotFormItem.render" :rowData="dataForm[a.prop]"></render-slot>
+        <render-slot v-if="a.slotFormItem" :render="a.slotFormItem.render" :rowData="dataForm[a.prop]"></render-slot>
         <el-input v-else v-model="dataForm[a.prop]" :placeholder="`请输入${a.label}`"></el-input>
       </el-form-item>
     </el-form>
@@ -27,16 +28,18 @@
       width: {
         type: String,
         default: '50%'
-      },
-      dataForm: Object
+      }
     },
     data () {
       return {
-        visible: false
+        visible: false,
+        dataForm: {}
       }
     },
     components: {
       RenderSlot
+    },
+    mounted () {
     },
     methods: {
       init (id) {
@@ -53,9 +56,8 @@
             params: this.$http.adornParams({id: this.dataForm.id})
           }).then(({data}) => {
             if (data && data.code === 0) {
-              this.dataForm = data.data
+              this.dataForm = JSON.parse(JSON.stringify(data.data))
               this.dataForm.id = id
-              console.log(data)
             }
           })
         }
