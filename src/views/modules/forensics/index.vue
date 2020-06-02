@@ -1,7 +1,7 @@
 <template>
   <div>
     <pagination-table 
-      ref="driver-delivery-note-list" 
+      ref="forensics-list" 
       :table-columns='tableColumns'
       :search-data='dataForm'
       :get-list-url="'/sys/evidence/list'"
@@ -42,6 +42,7 @@
     <show-detail
       :detailData="detailData"
       :detailFormItems="detailFormItems"
+      width="70%"
       ref="show-detail"
     >
 
@@ -222,7 +223,7 @@ export default {
       this.chooseData = [data]
     },
     assignDrivers () {
-      let chooseDatas = this.$refs['driver-delivery-note-list'].dataListSelections
+      let chooseDatas = this.$refs['forensics-list'].dataListSelections
       if (!chooseDatas.length) {
         this.$message('请至少选择一条数据')
         return
@@ -231,68 +232,151 @@ export default {
       this.visible = true
       this.chooseData = chooseDatas
     },
-    showDetail (data) {
-      this.detailData = data
-      this.$refs['show-detail'].dataForm = data
-      this.$refs['show-detail'].visible = true
+    async showDetail (data) {
+      let json = await this.$http({
+        url: this.$http.adornUrl('/sys/evidence/view'),
+        method: 'post',
+        params: this.$http.adornParams({id: data.id})
+      })
 
-      this.detailFormItems = [{
-        label: '取证单号',
-        prop: 'order_number'
-      }, {
-        label: '司机',
-        prop: 'driver_user_name'
-      }, {
-        label: '取证员',
-        prop: 'evidence_user_name'
-      }, {
-        label: '单车服务商',
-        prop: 'bicycle_provider_ids',
-        render: (h, params) => {
-          const { rowData } = params
-          const ids = rowData.split(',')
+      const { data: detail } = json
+      if (detail && detail.code === 0) {
+        this.detailData = detail.data
+        this.$refs['show-detail'].dataForm = detail.data
+        this.$refs['show-detail'].visible = true
 
-          return h('div',
+        this.detailFormItems = [{
+          colNum: 3,
+          cols: [{
+            label: '取证单号',
+            prop: 'orderNumber'
+          }, {
+            label: '状态',
+            prop: 'status',
+            render: (h, params) => {
+              const { rowData } = params
+              return h('el-tag', {style: 'margin-right:10px'}, allStatusOption[rowData])
+            }
+          }, {
+            label: '地图位置',
+            prop: 'map',
+            render: (h, params) => {
+              const { latitudes, longitude } = data
+
+              return h('el-amap', {
+                style: {
+                  width: '100%',
+                  height: '200px',
+                  position: 'absolute',
+                  zIndex: '999'
+                },
+                props: {
+                  zoom: 15,
+                  center: [longitude, latitudes]
+                }
+              }, [
+                h('el-amap-marker', {
+                  props: {
+                    position: [longitude, latitudes],
+                    visible: true,
+                    draggable: false
+                  }
+                })
+              ])
+            }
+          }]
+        }, {
+          colNum: 3,
+          cols: [{
+            label: '交付单号',
+            prop: 'deliverOrderNumber'
+          }, {
+            label: '创建时间',
+            prop: 'createTime'
+          }]
+        }, {
+          colNum: 3,
+          cols: [{
+            label: '取证员',
+            prop: 'evidenceUserName'
+          }, {
+            label: '地点',
+            prop: 'position'
+          }]
+        }, {
+          colNum: 3,
+          cols: [ {
+            label: '司机',
+            prop: 'driverUserName'
+          }, {
+            label: '备注',
+            prop: 'remark'
+          }]
+        }, {
+          colNum: 1,
+          cols: [ {
+            label: '单车服务商',
+            prop: 'bicycleProviderIds',
+            render: (h, params) => {
+              const { rowData } = params
+              const ids = rowData.split(',')
+
+              return h('div',
             ids.map(a => this.bicycleProviderList
             .find(b => b.bicycleProviderId.toString() === a))
-            .map(a => h('el-tag', {style: 'margin-right:10px'}, a.name))
-          )
-        }
-      }, {
-        label: '取证照片',
-        prop: 'evidence_photo',
-        render: (h, params) => {
-          return this.renderImage(h, params)
-        }
-      }, {
-        label: '清运前照片',
-        prop: 'clear_photo_before',
-        render: (h, params) => {
-          return this.renderImage(h, params)
-        }
-      }, {
-        label: '清运后照片',
-        prop: 'clear_photo_after',
-        render: (h, params) => {
-          return this.renderImage(h, params)
-        }
-      }, {
-        label: '地点',
-        prop: 'position'
-      }, {
-        label: '状态',
-        prop: 'status',
-        render: (h, params) => {
-          const { rowData } = params
-          return h('el-tag', {style: 'margin-right:10px'}, allStatusOption[rowData])
-        }
-      }, {
-        label: '备注',
-        prop: 'remark'
-      }, {
-        label: '创建时间',
-        prop: 'create_time'
-      }]
+            .map(a => h('el-tag', {style: 'margin-right:10px'}, a.name)))
+            }
+          }]
+        }, {
+          colNum: 1,
+          cols: []
+        }, {
+          colNum: 3,
+          cols: [{
+            label: '清运清单',
+            prop: 'clearInventory',
+            render: (h, params) => {
+              const { rowData } = params
+              return rowData ? rowData.map(a =>
+              h('el-tag', {
+                style: 'margin-right:10px'
+              },
+              `${this.bicycleProviderList
+                .find(b => b.bicycleProviderId.toString() === a.bicycleProviderId.toString()).name}X${a.number}`
+              )) : ''
+            }
+          }]
+        }, {
+          colNum: 1,
+          cols: [{
+            label: '取证照片',
+            prop: 'evidencePhoto',
+            render: (h, params) => {
+              return this.renderImage(h, params)
+            }
+          }]
+        }, {
+          colNum: 1,
+          cols: [{
+            label: '清运前',
+            prop: 'clearPhotoBefore',
+            render: (h, params) => {
+              return this.renderImage(h, params)
+            }
+          }]
+        }, {
+          colNum: 1,
+          cols: [{
+            label: '清运后',
+            prop: 'clearPhotoAfter',
+            render: (h, params) => {
+              return this.renderImage(h, params)
+            }
+          }]
+        }]
+      } else {
+
+      }
     },
     async dataFormSubmit () {
       const { driverId } = this.dataForm
@@ -307,7 +391,7 @@ export default {
 
       if (json.every(a => a.data.code === 0)) {
         this.visible = false
-        this.$refs['driver-delivery-note-list'].getDataList()
+        this.$refs['forensics-list'].getDataList()
       } else {
         this.$message(json.find(a => a.data.code !== 0).data.msg)
       }
@@ -316,16 +400,16 @@ export default {
       const { rowData } = params
       const imgs = (rowData || '').split(',')
 
-      return h('el-image', {
+      return rowData ? imgs.map(a => h('el-image', {
         style: {
           width: '100px',
           height: '100px'
         },
         props: {
-          src: `${imgs[0]}?x-oss-process=image/resize,m_pad,h_100,w_100`,
-          'preview-src-list': imgs
+          src: `${a}?x-oss-process=image/resize,m_pad,h_100,w_100`,
+          'preview-src-list': [a]
         }
-      })
+      })) : ''
     }
   }
 }

@@ -6,7 +6,6 @@
       :get-list-url="'/sys/businessUser/list'"
       :saveOrUpdateUrl="'/sys/businessUser'"
       :getFormDateUrl="'/sys/businessUser/view'"
-      :delete-url="''"
       :useDefultOperate="false"
       :addOrUpdateDialogWidth="'40%'"
       :onlyCanSaveAndChange="true"
@@ -50,6 +49,38 @@ export default {
           width: '300',
           label: '登录名'
         }, {
+          prop: 'password',
+          headerAlign: 'center',
+          align: 'center',
+          width: '200',
+          label: '密码',
+          render: (h, params) => {
+            const { rowData } = params
+            return h('el-input', {
+              props: {
+                showPassword: true,
+                value: rowData,
+                disabled: true
+              }
+            }, [])
+          },
+          slotFormItem: {
+            render: (h, params) => {
+              const { rowData } = params
+              return h('el-input', {
+                props: {
+                  showPassword: true,
+                  value: rowData
+                },
+                on: {
+                  input: (e) => {
+                    this.$refs['app-user-list'].$refs['addOrUpdate'].dataForm.password = e
+                  }
+                }
+              }, [])
+            }
+          }
+        }, {
           prop: 'type',
           headerAlign: 'center',
           align: 'center',
@@ -63,8 +94,6 @@ export default {
                 },
                 on: {
                   input: (e) => {
-                    console.log(e)
-
                     this.$refs['app-user-list'].$refs['addOrUpdate'].dataForm.type = e
                   }
                 }

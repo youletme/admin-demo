@@ -5,9 +5,11 @@
       :table-columns='tableColumns'
       :get-list-url="'/sys/warehouse/list'"
       :delete-url="''"
-      :useDefultOperate="true"
+      :saveOrUpdateUrl="'/sys/warehouse'"
+      :getFormDateUrl="'/sys/warehouse/view'"
+      :useDefultOperate="false"
       :addOrUpdateDialogWidth="'30%'"
-      :onlyCanSaveAndChange="false"
+      :onlyCanSaveAndChange="true"
     >
 
     </pagination-table>

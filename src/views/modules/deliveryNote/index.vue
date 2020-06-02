@@ -1,7 +1,7 @@
 <template>
   <div>
     <pagination-table 
-      ref="bike-server-list"
+      ref="deliver-note-list"
       :table-columns='tableColumns'
       :get-list-url="'/sys/deliver/list'"
       :delete-url="'/sys/user/delete'"
@@ -16,6 +16,7 @@
 
 <script>
 import PaginationTable from '@/components/pagination-table'
+import { allStatusOption } from '@/enum/index'
 
 export default {
   data () {
@@ -41,6 +42,27 @@ export default {
           width: '400',
           label: '取证单号'
         }, {
+          prop: 'total',
+          headerAlign: 'center',
+          align: 'center',
+          width: '80',
+          label: '交付总数'
+        }, {
+          prop: 'status',
+          headerAlign: 'center',
+          align: 'center',
+          width: '80',
+          label: '状态',
+          render: (h, params) => {
+            const { rowData } = params
+            const { status } = rowData
+            return h('el-tag', {
+              props: {
+                size: 'small'
+              }
+            }, allStatusOption[status])
+          }
+        }, {
           prop: 'driverUserName',
           headerAlign: 'center',
           align: 'center',
@@ -50,7 +72,12 @@ export default {
           headerAlign: 'center',
           align: 'center',
           // width: '200',
-          label: '门卫账号'
+          label: '门卫'
+        }, {
+          prop: 'createTime',
+          headerAlign: 'center',
+          align: 'center',
+          label: '创建时间'
         }
       ]
 

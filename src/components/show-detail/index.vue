@@ -6,10 +6,15 @@
     :width="width"
     :visible.sync="visible">
     <el-form :model="dataForm" class="show-detail" ref="dataForm" label-width="80px">
-      <el-form-item v-for="(a,i) in detailFormItems" :key="i" :label="a.label" :prop="a.prop">
-        <render-slot v-if="a.render" :render="a.render" :rowData="dataForm[a.prop]"></render-slot>
-        <el-input v-else v-model="dataForm[a.prop]" readonly></el-input>
-      </el-form-item>
+      <el-row v-for="(a,i) in detailFormItems" :key="i">
+        <el-col :span="parseInt(24/a.colNum)" v-for="(b,j) in a.cols" :key="`col${j}`">
+          <el-form-item :label="b.label" :prop="b.prop">
+            <render-slot v-if="b.render" :render="b.render" :rowData="dataForm[b.prop]"></render-slot>
+            <el-input v-else v-model="dataForm[b.prop]" readonly></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button type="primary" @click="visible = false">确定</el-button>

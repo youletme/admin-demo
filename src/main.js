@@ -10,6 +10,7 @@ import '@/assets/scss/index.scss'
 import httpRequest from '@/utils/httpRequest' // api: https://github.com/axios/axios
 import { isAuth } from '@/utils'
 import cloneDeep from 'lodash/cloneDeep'
+import AMap from 'vue-amap'
 
 Vue.use(VueCookie)
 Vue.config.productionTip = false
@@ -18,6 +19,16 @@ Vue.config.productionTip = false
 if (process.env.NODE_ENV !== 'production') {
   require('@/mock')
 }
+
+Vue.use(AMap)
+
+// 初始化vue-amap
+AMap.initAMapApiLoader({
+  // 高德的key
+  key: '1fb5e510c217188e84853b687f0541d5',
+  // 插件集合 （插件按需引入）
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
+})
 
 // 挂载全局
 Vue.prototype.$http = httpRequest // ajax请求方法
