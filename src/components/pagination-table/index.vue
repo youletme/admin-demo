@@ -18,7 +18,7 @@
         align="center"
         width="50">
       </el-table-column>
-      <el-table-column v-for="(a,i) in tableColumns" :key="i"
+      <el-table-column v-for="(a,i) in tableColumns.filter(a => !a.notIntable)" :key="i"
         :prop="a.prop"
         :header-align="a.headerAlign"
         :align="a.align"

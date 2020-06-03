@@ -106,7 +106,6 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: rgba(38, 50, 56, .6);
     overflow: hidden;
     &:before {
       position: fixed;
@@ -116,7 +115,7 @@
       width: 100%;
       height: 100%;
       content: "";
-      background-image: url(~@/assets/img/login_bg.jpg);
+      background-image: url(~@/assets/img/login_bg.png);
       background-size: cover;
     }
     .site-content__wrapper {

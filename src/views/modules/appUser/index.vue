@@ -7,7 +7,7 @@
       :saveOrUpdateUrl="'/sys/businessUser'"
       :getFormDateUrl="'/sys/businessUser/view'"
       :useDefultOperate="false"
-      :addOrUpdateDialogWidth="'30%'"
+      :addOrUpdateDialogWidth="'50%'"
       :onlyCanSaveAndChange="true"
       @initCallBack="initCallBack"
     >
@@ -32,6 +32,9 @@ const userOption = [{
 }, {
   value: 4,
   label: '门卫'
+}, {
+  value: 5,
+  label: '清运审核员'
 }]
 
 export default {
@@ -62,6 +65,7 @@ export default {
           align: 'center',
           width: '200',
           label: '密码',
+          notIntable: true,
           render: (h, params) => {
             const { rowData } = params
             return h('el-input', {
@@ -209,6 +213,7 @@ export default {
 
         if (id !== 0) {
           this.changeSelectOptions(type)
+          this.$refs['app-user-list'].$refs['addOrUpdate'].dataForm.password = ''
         } else {
           this.selectOptions = []
         }

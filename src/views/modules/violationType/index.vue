@@ -1,14 +1,13 @@
 <template>
   <div>
     <pagination-table 
-      ref="bike-server-list" 
+      ref="violation-type"
       :table-columns='tableColumns'
-      :get-list-url="'/sys/bicycleProvider/list'"
-      :delete-url="'/sys/user/delete'"
+      :get-list-url="'/sys/violationCategory/list'"
+      :saveOrUpdateUrl="'/sys/violationCategory'"
+      :getFormDateUrl="'/sys/violationCategory/view'"
       :useDefultOperate="false"
-      :addOrUpdateDialogWidth="'30%'"
-      :saveOrUpdateUrl="'/sys/bicycleProvider'"
-      :getFormDateUrl="'/sys/bicycleProvider/view'"
+      :addOrUpdateDialogWidth="'40%'"
       :onlyCanSaveAndChange="true"
     >
 
@@ -18,7 +17,6 @@
 
 <script>
 import PaginationTable from '@/components/pagination-table'
-
 const statusOption = [
   {
     label: '停用',
@@ -31,51 +29,34 @@ const statusOption = [
     value: 1
   }
 ]
-
 export default {
   data () {
     return {
       tableColumns: [
         {
-          prop: 'bicycleProviderId',
+          prop: 'id',
           headerAlign: 'center',
           align: 'center',
           width: '80',
           label: 'ID',
           notInForm: true
         }, {
+          prop: 'number',
+          headerAlign: 'center',
+          align: 'center',
+          width: '100',
+          label: '编号'
+        }, {
           prop: 'name',
           headerAlign: 'center',
           align: 'center',
-          width: '400',
-          label: '服务商品牌'
-        }, {
-          prop: 'mobile',
-          headerAlign: 'center',
-          align: 'center',
-          // width: '200',
-          label: '联系电话',
-          slotFormItem: {
-            render: (h, params) => {
-              return h('el-input', {
-                props: {
-                  value: params.rowData
-                },
-                on: {
-                  input: (e) => {
-                    if (e.length <= 11) {
-                      this.$refs['bike-server-list'].$refs['addOrUpdate'].dataForm.mobile = e
-                    }
-                  }
-                }
-              })
-            }
-          }
+          width: '',
+          label: '违规条例'
         }, {
           prop: 'status',
           headerAlign: 'center',
           align: 'center',
-          // width: '200',
+          width: '80',
           label: '状态',
           slotFormItem: {
             render: (h, params) => {
@@ -111,8 +92,16 @@ export default {
               }, statusOption[status].label)
             ])
           }
+        }, {
+          prop: 'createTime',
+          headerAlign: 'center',
+          align: 'center',
+          width: '',
+          label: '创建时间',
+          notInForm: true
         }
       ]
+
     }
   },
   components: {
