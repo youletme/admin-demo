@@ -65,6 +65,7 @@
       :getFormDateUrl="getFormDateUrl"
       :saveOrUpdateUrl="saveOrUpdateUrl"
       :width="addOrUpdateDialogWidth"
+      @initCallBack="initCallBack"
     ></add-or-update>
 
     
@@ -201,9 +202,6 @@ export default {
         this.$refs.addOrUpdate.init(id)
       })
     },
-    showDetail (data) {
-      console.log(data)
-    },
     // 删除
     deleteHandle (id) {
       let ids = id ? [id] : this.dataListSelections.map(item => {
@@ -233,6 +231,9 @@ export default {
           }
         })
       }).catch(() => {})
+    },
+    initCallBack (a) {
+      this.$emit('initCallBack', a)
     }
   }
 }

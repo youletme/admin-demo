@@ -5,7 +5,8 @@ import store from '@/store'                   // api: https://github.com/vuejs/v
 import VueCookie from 'vue-cookie'            // api: https://github.com/alfhen/vue-cookie
 import '@/element-ui'                         // api: https://github.com/ElemeFE/element
 import '@/icons'                              // api: http://www.iconfont.cn/
-import 'element-ui/lib/theme-chalk/index.css'
+// import 'element-ui/lib/theme-chalk/index.css'
+import '@/element-ui-theme/element-#17B3A3/index.css'
 import '@/assets/scss/index.scss'
 import httpRequest from '@/utils/httpRequest' // api: https://github.com/axios/axios
 import { isAuth } from '@/utils'
@@ -25,9 +26,10 @@ Vue.use(AMap)
 // 初始化vue-amap
 AMap.initAMapApiLoader({
   // 高德的key
-  key: '1fb5e510c217188e84853b687f0541d5',
+  key: '65a4996040e8f925ba2444e2792f5106',
   // 插件集合 （插件按需引入）
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor']
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor'],
+  uiVersion: '1.0' // 版本号
 })
 
 // 挂载全局

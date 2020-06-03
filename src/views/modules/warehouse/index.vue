@@ -13,6 +13,7 @@
     >
 
     </pagination-table>
+
   </div>
 </template>
 
@@ -69,6 +70,8 @@ export default {
   },
   components: {
     PaginationTable
+  },
+  methods: {
   }
 }
 </script>

@@ -7,16 +7,19 @@
       :saveOrUpdateUrl="'/sys/businessUser'"
       :getFormDateUrl="'/sys/businessUser/view'"
       :useDefultOperate="false"
-      :addOrUpdateDialogWidth="'40%'"
+      :addOrUpdateDialogWidth="'30%'"
       :onlyCanSaveAndChange="true"
+      @initCallBack="initCallBack"
     >
 
     </pagination-table>
+
   </div>
 </template>
 
 <script>
 import PaginationTable from '@/components/pagination-table'
+
 const userOption = [{
   value: 1,
   label: '取证员'
@@ -32,8 +35,13 @@ const userOption = [{
 }]
 
 export default {
+
   data () {
     return {
+      localData: {},
+      bicycleList: [],
+      warehouseList: [],
+      selectOptions: [],
       tableColumns: [
         {
           prop: 'userId',
@@ -59,7 +67,7 @@ export default {
             return h('el-input', {
               props: {
                 showPassword: true,
-                value: rowData,
+                value: rowData.password,
                 disabled: true
               }
             }, [])
@@ -69,8 +77,9 @@ export default {
               const { rowData } = params
               return h('el-input', {
                 props: {
-                  showPassword: true,
-                  value: rowData
+                  // showPassword: true,
+                  value: rowData,
+                  type: 'password'
                 },
                 on: {
                   input: (e) => {
@@ -88,20 +97,23 @@ export default {
           label: '用户类型',
           slotFormItem: {
             render: (h, params) => {
+              const { rowData } = params
+
               return h('el-radio-group', {
                 props: {
-                  value: params.rowData
+                  value: rowData
                 },
                 on: {
                   input: (e) => {
                     this.$refs['app-user-list'].$refs['addOrUpdate'].dataForm.type = e
+                    this.changeSelectOptions(e)
+                    this.$refs['app-user-list'].$refs['addOrUpdate'].dataForm.relationalId = ''
                   }
                 }
               }, userOption.map((a, i) => (
                 h('el-radio', {
                   props: {
-                    label: a.value,
-                    value: a.value
+                    label: a.value
                   }
                 }, a.label)))
               )
@@ -125,6 +137,44 @@ export default {
           align: 'center',
           label: '创建时间',
           notInForm: true
+        }, {
+          prop: 'relationalName',
+          headerAlign: 'center',
+          align: 'center',
+          width: '',
+          label: '关联单车服务商/仓库',
+          notInForm: true
+
+        }, {
+          prop: 'relationalId',
+          headerAlign: 'center',
+          align: 'center',
+          width: '',
+          label: '关联单车服务商/仓库ID',
+          slotFormItem: {
+            render: (h, params) => {
+              const { rowData } = params
+
+              return h('el-select', {
+                props: {
+                  value: rowData
+                },
+                on: {
+                  input: (e) => {
+                    this.$refs['app-user-list'].$refs['addOrUpdate'].dataForm.relationalName = this.selectOptions.find(a => a.value === e).label
+                    this.$refs['app-user-list'].$refs['addOrUpdate'].dataForm.relationalId = e
+                  }
+                }
+              }, this.selectOptions.map(a => (
+                h('el-option', {
+                  props: {
+                    label: a.label,
+                    value: a.value
+                  }
+                })
+              )))
+            }
+          }
         }
       ]
 
@@ -132,10 +182,52 @@ export default {
   },
   components: {
     PaginationTable
+  },
+  async mounted () {
+    let json1 = await this.$http({
+      url: this.$http.adornUrl('/sys/bicycleProvider/list'),
+      method: 'get'
+    })
+    const { data } = json1
+    if (data && data.code === 0) {
+      this.bicycleList = data.data.records
+    }
+
+    let json = await this.$http({
+      url: this.$http.adornUrl('/sys/warehouse/list'),
+      method: 'get'
+    })
+    const { data: warehouseData } = json
+    if (warehouseData && warehouseData.code === 0) {
+      this.warehouseList = warehouseData.data.records
+    }
+  },
+  methods: {
+    initCallBack (a) {
+      if (a) {
+        const { type, id } = a
+
+        if (id !== 0) {
+          this.changeSelectOptions(type)
+        } else {
+          this.selectOptions = []
+        }
+      }
+    },
+    changeSelectOptions (type) {
+      switch (type) {
+        case 2:
+          this.selectOptions = this.bicycleList.map(a => ({label: a.name, value: a.bicycleProviderId}))
+          break
+        case 4:
+          this.selectOptions = this.warehouseList.map(a => ({label: a.name, value: a.id}))
+          break
+        default:
+          this.selectOptions = []
+          break
+      }
+    }
   }
 }
 </script>
 
-<style>
-
-</style>

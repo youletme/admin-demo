@@ -329,9 +329,6 @@ export default {
           }]
         }, {
           colNum: 1,
-          cols: []
-        }, {
-          colNum: 3,
           cols: [{
             label: '清运清单',
             prop: 'clearInventory',

@@ -69,10 +69,7 @@ export default {
                 },
                 on: {
                   input: (e) => {
-                    this.$refs['bike-server-list'].$refs['addOrUpdate'].dataForm = {
-                      ...this.$refs['bike-server-list'].$refs['addOrUpdate'].dataForm,
-                      status: e   // 与对应的prop一样
-                    }
+                    this.$refs['bike-server-list'].$refs['addOrUpdate'].dataForm.status = e
                   }
                 }
               }, statusOption.map(a => (

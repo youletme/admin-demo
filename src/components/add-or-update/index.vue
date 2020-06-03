@@ -39,10 +39,15 @@
     components: {
       RenderSlot
     },
-    mounted () {
+    created () {
+      let obj = {}
+      this.formItems.forEach(a => {
+        obj = {...obj, ...{[a.prop]: ''}}
+      })
+      this.dataForm = obj
     },
     methods: {
-      init (id) {
+      async init (id) {
         this.dataForm.id = id || 0
         this.visible = true
         this.$nextTick(() => {
@@ -50,16 +55,20 @@
         })
 
         if (this.dataForm.id) {
-          this.$http({
+          let json = await this.$http({
             url: this.$http.adornUrl(`${this.getFormDateUrl}`),
             method: 'post',
             params: this.$http.adornParams({id: this.dataForm.id})
-          }).then(({data}) => {
-            if (data && data.code === 0) {
-              this.dataForm = JSON.parse(JSON.stringify(data.data))
-              this.dataForm.id = id
-            }
           })
+          const { data } = json
+          if (data && data.code === 0) {
+            this.dataForm = JSON.parse(JSON.stringify(data.data))
+            this.dataForm.id = id
+          }
+        }
+
+        if (this.$emit('initCallBack')) {
+          this.$emit('initCallBack', this.dataForm)
         }
       },
       // 表单提交
