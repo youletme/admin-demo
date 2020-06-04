@@ -2,9 +2,13 @@
   <div class="site-wrapper site-page--login">
     <div class="site-content__wrapper">
       <div class="site-content">
+        <div class="login-title">
+          <img :src="require('@/assets/img/logo.png')" style="width:80px;height:80px;" alt="">
+          海曙综合执法平台
+        </div>
         <div class="login-main">
-          <div class="login-title">用户登录</div>
-          <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" status-icon>
+
+          <el-form class="login-form" :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" status-icon>
             <el-form-item prop="userName">
               <el-input prefix-icon='el-icon-s-custom' v-model="dataForm.userName" placeholder="帐号"></el-input>
             </el-form-item>
@@ -161,14 +165,16 @@
       width: 20%;
     }
     .login-title {
-      font-size:34px;
-      height: 47px;
-      font-weight:500;
-      line-height:30px;
-      margin-bottom: 27px;
-      color:#4382F0;
-      letter-spacing: 20px;
+      font-size: 34px;
+      font-weight: 500;
+      color: #4382F0;
+      letter-spacing: 10px;
       text-align: center;
+      position: absolute;
+      right: 11%;
+      top: 18%;
+      transform: translateY(-50%);
+      width: 36%;
     }
     .login-captcha {
       overflow: hidden;

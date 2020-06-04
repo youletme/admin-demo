@@ -314,8 +314,8 @@ export default {
           }]
         }, {
           colNum: 1,
-          cols: [ {
-            label: '单车服务商',
+          cols: [{
+            label: '服务商',
             prop: 'bicycleProviderIds',
             render: (h, params) => {
               const { rowData } = params
