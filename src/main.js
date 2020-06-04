@@ -6,7 +6,7 @@ import VueCookie from 'vue-cookie'            // api: https://github.com/alfhen/
 import '@/element-ui'                         // api: https://github.com/ElemeFE/element
 import '@/icons'                              // api: http://www.iconfont.cn/
 // import 'element-ui/lib/theme-chalk/index.css'
-import '@/element-ui-theme/element-#17B3A3/index.css'
+import '@/element-ui-theme/element-#4382F0/index.css'
 import '@/assets/scss/index.scss'
 import httpRequest from '@/utils/httpRequest' // api: https://github.com/axios/axios
 import { isAuth } from '@/utils'

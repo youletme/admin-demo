@@ -2,18 +2,14 @@
   <div class="site-wrapper site-page--login">
     <div class="site-content__wrapper">
       <div class="site-content">
-        <div class="brand-info">
-          <h2 class="brand-info__text">renren-fast-vue</h2>
-          <p class="brand-info__intro">renren-fast-vue基于vue、element-ui构建开发，实现renren-fast后台管理前端功能，提供一套更优的前端解决方案。</p>
-        </div>
         <div class="login-main">
-          <h3 class="login-title">管理员登录</h3>
+          <div class="login-title">用户登录</div>
           <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" status-icon>
             <el-form-item prop="userName">
-              <el-input v-model="dataForm.userName" placeholder="帐号"></el-input>
+              <el-input prefix-icon='el-icon-s-custom' v-model="dataForm.userName" placeholder="帐号"></el-input>
             </el-form-item>
             <el-form-item prop="password">
-              <el-input v-model="dataForm.password" type="password" placeholder="密码"></el-input>
+              <el-input prefix-icon='el-icon-lock' v-model="dataForm.password" type="password" placeholder="密码"></el-input>
             </el-form-item>
             <el-form-item prop="captcha">
               <el-row :gutter="20">
@@ -26,9 +22,9 @@
                 </el-col>
               </el-row>
             </el-form-item>
-            <el-form-item>
+            <!-- <el-form-item> -->
               <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">登录</el-button>
-            </el-form-item>
+            <!-- </el-form-item> -->
           </el-form>
         </div>
       </div>
@@ -129,14 +125,21 @@
       overflow-x: hidden;
       overflow-y: auto;
       background-color: transparent;
+
+      .el-form{
+        .el-form-item{
+          margin-bottom: 26px;
+        }
+        
+        .el-input{
+          .el-input__inner{
+            border-radius: 18px;
+          }
+        }
+      }
     }
     .site-content {
       min-height: 100%;
-      padding: 30px 500px 30px 30px;
-    }
-    .brand-info {
-      margin: 220px 100px 0 90px;
-      color: #fff;
     }
     .brand-info__text {
       margin:  0 0 22px 0;
@@ -152,15 +155,20 @@
     }
     .login-main {
       position: absolute;
-      top: 0;
-      right: 0;
-      padding: 150px 60px 180px;
-      width: 470px;
-      min-height: 100%;
-      background-color: #fff;
+      top: 45%;
+      transform: translateY(-50%);
+      right: 17%;
+      width: 20%;
     }
     .login-title {
-      font-size: 16px;
+      font-size:34px;
+      height: 47px;
+      font-weight:500;
+      line-height:30px;
+      margin-bottom: 27px;
+      color:#4382F0;
+      letter-spacing: 20px;
+      text-align: center;
     }
     .login-captcha {
       overflow: hidden;
@@ -171,7 +179,19 @@
     }
     .login-btn-submit {
       width: 100%;
-      margin-top: 38px;
+      margin-top: 15px;
+      background:linear-gradient(270deg,rgba(82,128,249,1) 0%,rgba(64,52,221,1) 100%);
+      border-radius:37px;
+      height:50px;
+      border-color: rgba(82,128,249,1);
+
+      span{
+        font-family:'PingFang SC';
+        font-size: 16px;
+        font-weight: 600;
+        opacity: 0.87;
+        letter-spacing: 2px;
+      }
     }
   }
 </style>

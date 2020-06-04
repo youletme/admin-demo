@@ -57,7 +57,7 @@
 <script>
 import PaginationTable from '@/components/pagination-table'
 import ShowDetail from '@/components/show-detail'
-import { allStatusOption } from '@/enum/index'
+import { allStatusOption } from '../../../../static/enum/index'
 export default {
   data () {
     return {

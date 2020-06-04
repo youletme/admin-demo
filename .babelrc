@@ -5,11 +5,7 @@
     }],
     "stage-2"
   ],
-  "plugins": ["transform-runtime", ["component", [
-    {
-      "libraryName": "element-ui"
-    }
-  ]]],
+  "plugins": ["transform-runtime", ["component", [{ "libraryName": "element-ui" }]], "transform-vue-jsx"],
   "env": {
     "test": {
       "presets": ["env", "stage-2"],

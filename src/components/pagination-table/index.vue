@@ -113,8 +113,6 @@ export default {
   },
   data () {
     return {
-      dataForm: {
-      },
       addOrUpdateVisible: false,
       dataList: [],
       pageIndex: 1,
@@ -142,12 +140,6 @@ export default {
     } else {
       console.log('tableColumn must has ID for label')
     }
-
-    let obj = {}
-    this.formItems.forEach(a => {
-      obj = {...obj, ...{[a.prop]: ''}}
-    })
-    this.dataForm = obj
   },
   activated () {
     this.getDataList()
