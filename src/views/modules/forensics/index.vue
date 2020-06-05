@@ -172,7 +172,9 @@ export default {
       driverOptions: [],
       detailData: {},
       detailFormItems: [],
-      bicycleProviderList: []
+      bicycleProviderList: [],
+      violationCategoryList: []
+
     }
   },
   components: {
@@ -203,6 +205,21 @@ export default {
       const { records } = bikeList.data
       this.bicycleProviderList = records.map(a => ({
         bicycleProviderId: a.bicycleProviderId,
+        name: a.name
+      }))
+    }
+
+    let violationCategoryJSON = await this.$http({
+      url: this.$http.adornUrl('/sys/violationCategory/list'),
+      method: 'get'
+    })
+
+    const { data: violationCategoryList } = violationCategoryJSON
+
+    if (violationCategoryList && violationCategoryList.code === 0) {
+      const { records } = violationCategoryList.data
+      this.violationCategoryList = records.map(a => ({
+        id: a.id,
         name: a.name
       }))
     }
@@ -303,7 +320,7 @@ export default {
             prop: 'remark'
           }]
         }, {
-          colNum: 1,
+          colNum: 3,
           cols: [{
             label: '服务商',
             prop: 'bicycleProviderIds',
@@ -314,6 +331,18 @@ export default {
               return h('div',
             ids.map(a => this.bicycleProviderList
             .find(b => b.bicycleProviderId.toString() === a))
+            .map(a => h('el-tag', {style: 'margin-right:10px'}, a.name)))
+            }
+          }, {
+            label: '违规类别',
+            prop: 'violationCategoryIds',
+            render: (h, params) => {
+              const { rowData } = params
+              const ids = rowData.split(',')
+
+              return h('div',
+            ids.map(a => this.violationCategoryList
+            .find(b => b.id.toString() === a))
             .map(a => h('el-tag', {style: 'margin-right:10px'}, a.name)))
             }
           }]

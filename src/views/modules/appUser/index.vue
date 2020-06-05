@@ -71,19 +71,18 @@ export default {
             return h('el-input', {
               props: {
                 showPassword: true,
-
                 value: rowData,
                 type: 'password'
               },
               attrs: {
-                placeholder: '请输入密码'
+                placeholder: '请输入新密码'
               },
               on: {
                 input: (e) => {
                   this.$refs['app-user-list'].$refs['addOrUpdate'].dataForm.password = e
                 }
               }
-            }, [])
+            })
           }
         }
       }, {
@@ -207,7 +206,7 @@ export default {
 
         if (id !== 0) {
           this.changeSelectOptions(type)
-          this.$refs['app-user-list'].$refs['addOrUpdate'].dataForm.password = null
+          this.$refs['app-user-list'].$refs['addOrUpdate'].dataForm.password = ''
         } else {
           this.selectOptions = []
         }

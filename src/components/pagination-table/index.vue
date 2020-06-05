@@ -12,7 +12,7 @@
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;" 
-      :default-sort="{prop: `${rowIdName}`}">
+      >
       <el-table-column
         type="selection"
         header-align="center"
@@ -25,7 +25,6 @@
         :align="a.align"
         :width="a.width"
         :label="a.label"
-        :sortable="i === 0"
       >
         <template slot-scope="scope">
           <render-slot v-if="a.render" :render="a.render" :rowData="scope.row"></render-slot>
