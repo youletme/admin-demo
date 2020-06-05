@@ -141,6 +141,7 @@ export default {
       rowOperate: {
         render: (h, params) => {
           const { rowData } = params
+          console.log(rowData)
 
           return h('div', {
             style: {
@@ -160,7 +161,7 @@ export default {
               props: {
                 size: 'small',
                 type: 'text',
-                disabled: rowData.status !== 3
+                disabled: rowData.status !== 3 || rowData.driver_user_name !== null
               },
               on: {
                 click: () => this.assignDriver(rowData)
