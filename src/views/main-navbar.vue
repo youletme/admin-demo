@@ -3,7 +3,7 @@
     <div class="site-navbar__header">
       <h1 class="site-navbar__brand" @click="$router.push({ name: 'home' })">
         <img :src="require('@/assets/img/logo.png')" class="logo-img" alt="">
-        <a class="site-navbar__brand-lg" href="javascript:;">海曙区综合执法平台</a>
+        <a class="site-navbar__brand-lg" href="javascript:;">海曙区城管综合执法平台</a>
       </h1>
     </div>
     <div class="site-navbar__body clearfix">
@@ -109,6 +109,7 @@
   }
 
   .site-navbar__brand-lg{
+    font-size: 16px;
     margin: 0;
   }
 </style>

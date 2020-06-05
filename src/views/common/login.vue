@@ -4,7 +4,7 @@
       <div class="site-content">
         <div class="login-title">
           <img :src="require('@/assets/img/logo.png')" style="width:80px;height:80px;" alt="">
-          海曙综合执法平台
+          海曙区城管综合执法平台
         </div>
         <div class="login-main">
 
