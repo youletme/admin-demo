@@ -65,89 +65,79 @@ export default {
       dataForm: {
         name: ''
       },
-      tableColumns: [
-        {
-          prop: 'id',
-          headerAlign: 'center',
-          align: 'center',
-          width: '60',
-          label: 'ID',
-          notInForm: true
-        },
-        {
-          prop: 'order_number',
-          headerAalign: 'center',
-          align: 'center',
-          width: '250',
-          label: '取证单号'
-        },
-        {
-          prop: 'position',
-          headerAalign: 'center',
-          align: 'center',
-          width: '250',
-          label: '取证地点'
-        },
-        {
-          prop: 'longitude',
-          headerAalign: 'center',
-          align: 'center',
-          width: '100',
-          label: '取证点经度'
-        },
-        {
-          prop: 'latitudes',
-          headerAalign: 'center',
-          align: 'center',
-          width: '100',
-          label: '取证点维度'
-        },
-        {
-          prop: 'evidence_user_name',
-          headerAalign: 'center',
-          align: 'center',
-          width: '100',
-          label: '取证人员'
-        },
-        {
-          prop: 'driver_user_name',
-          headerAalign: 'center',
-          align: 'center',
-          label: '指派司机'
-        },
-        {
-          prop: 'status',
-          headerAalign: 'center',
-          align: 'center',
-          label: '状态',
-          render: (h, params) => {
-            const { rowData } = params
-            const { status } = rowData
-            const type = {
-              0: 'info',
-              1: 'success',
-              3: 'warning'
-            }
-
-            return h('div', [
-              h('el-tag', {
-                props: {
-                  size: 'small',
-                  type: type[status]
-                }
-              }, allStatusOption[status])
-            ])
+      tableColumns: [{
+        prop: 'id',
+        headerAlign: 'center',
+        align: 'center',
+        width: '60',
+        label: 'ID',
+        notInForm: true
+      }, {
+        prop: 'order_number',
+        headerAalign: 'center',
+        align: 'center',
+        width: '250',
+        label: '取证单号'
+      }, {
+        prop: 'position',
+        headerAalign: 'center',
+        align: 'center',
+        width: '250',
+        label: '取证地点'
+      }, {
+        prop: 'longitude',
+        headerAalign: 'center',
+        align: 'center',
+        width: '100',
+        label: '取证点经度'
+      }, {
+        prop: 'latitudes',
+        headerAalign: 'center',
+        align: 'center',
+        width: '100',
+        label: '取证点维度'
+      }, {
+        prop: 'evidence_user_name',
+        headerAalign: 'center',
+        align: 'center',
+        width: '100',
+        label: '取证人员'
+      }, {
+        prop: 'driver_user_name',
+        headerAalign: 'center',
+        align: 'center',
+        label: '指派司机'
+      }, {
+        prop: 'status',
+        headerAalign: 'center',
+        align: 'center',
+        label: '状态',
+        render: (h, params) => {
+          const { rowData } = params
+          const { status } = rowData
+          const type = {
+            0: 'info',
+            1: 'success',
+            3: 'warning'
           }
-        },
-        {
-          prop: 'create_time',
-          headerAalign: 'center',
-          align: 'center',
-          width: '180',
-          label: '取证时间',
-          notInForm: true
+
+          return h('div', [
+            h('el-tag', {
+              props: {
+                size: 'small',
+                type: type[status]
+              }
+            }, allStatusOption[status])
+          ])
         }
-      ],
+      }, {
+        prop: 'create_time',
+        headerAalign: 'center',
+        align: 'center',
+        width: '180',
+        label: '取证时间',
+        notInForm: true
+      }],
       rowOperate: {
         render: (h, params) => {
           const { rowData } = params

@@ -107,4 +107,8 @@
     height: 30px;
     vertical-align: -8px;
   }
+
+  .site-navbar__brand-lg{
+    margin: 0;
+  }
 </style>
