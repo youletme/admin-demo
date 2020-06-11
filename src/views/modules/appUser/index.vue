@@ -19,23 +19,7 @@
 
 <script>
 import PaginationTable from '@/components/pagination-table'
-
-const userOption = [{
-  value: 1,
-  label: '取证员'
-}, {
-  value: 2,
-  label: '单车服务商'
-}, {
-  value: 3,
-  label: '司机'
-}, {
-  value: 4,
-  label: '门卫'
-}, {
-  value: 5,
-  label: '清运审核员'
-}]
+import { userOption } from '../../../../static/enum/index'
 
 export default {
 
