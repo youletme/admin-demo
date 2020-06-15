@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pagination-table 
+    <pagination-table
       ref="deliver-note-list"
       :table-columns='tableColumns'
       :get-list-url="'/sys/deliver/list'"

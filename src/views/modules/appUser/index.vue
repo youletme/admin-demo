@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pagination-table 
+    <pagination-table
       ref="app-user-list"
       :table-columns='tableColumns'
       :get-list-url="'/sys/businessUser/list'"
@@ -91,12 +91,12 @@ export default {
                 }
               }
             }, userOption.map((a, i) => (
-                h('el-radio', {
-                  props: {
-                    label: a.value
-                  }
-                }, a.label)))
-              )
+              h('el-radio', {
+                props: {
+                  label: a.value
+                }
+              }, a.label)))
+            )
           }
         },
         render: (h, params) => {
@@ -146,13 +146,13 @@ export default {
                 }
               }
             }, this.selectOptions.map(a => (
-                h('el-option', {
-                  props: {
-                    label: a.label,
-                    value: a.value
-                  }
-                })
-              ))
+              h('el-option', {
+                props: {
+                  label: a.label,
+                  value: a.value
+                }
+              })
+            ))
             )
           }
         }
@@ -212,4 +212,3 @@ export default {
   }
 }
 </script>
-

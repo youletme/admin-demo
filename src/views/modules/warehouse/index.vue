@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pagination-table 
+    <pagination-table
       ref="warehouse-list"
       :table-columns='tableColumns'
       :get-list-url="'/sys/warehouse/list'"

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <pagination-table 
-      ref="bike-server-list" 
+    <pagination-table
+      ref="bike-server-list"
       :table-columns='tableColumns'
       :get-list-url="'/sys/bicycleProvider/list'"
       :delete-url="'/sys/user/delete'"

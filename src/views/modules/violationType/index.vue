@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pagination-table 
+    <pagination-table
       ref="violation-type"
       :table-columns='tableColumns'
       :get-list-url="'/sys/violationCategory/list'"

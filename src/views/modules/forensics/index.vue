@@ -1,7 +1,7 @@
 <template>
   <div>
-    <pagination-table 
-      ref="forensics-list" 
+    <pagination-table
+      ref="forensics-list"
       :table-columns='tableColumns'
       :search-data='dataForm'
       :get-list-url="'/sys/evidence/list'"
@@ -50,7 +50,7 @@
 
     <div class="demo-image__preview">
 </div>
-    
+
   </div>
 </template>
 
@@ -330,9 +330,9 @@ export default {
               const ids = rowData.split(',')
 
               return h('div',
-            ids.map(a => this.bicycleProviderList
-            .find(b => b.bicycleProviderId.toString() === a))
-            .map(a => h('el-tag', {style: 'margin-right:10px'}, a.name)))
+                ids.map(a => this.bicycleProviderList
+                  .find(b => b.bicycleProviderId.toString() === a))
+                  .map(a => h('el-tag', {style: 'margin-right:10px'}, a.name)))
             }
           }, {
             label: '违规类别',
@@ -342,9 +342,9 @@ export default {
               const ids = rowData.split(',')
 
               return h('div',
-            ids.map(a => this.violationCategoryList
-            .find(b => b.id.toString() === a))
-            .map(a => h('el-tag', {style: 'margin-right:10px'}, a.name)))
+                ids.map(a => this.violationCategoryList
+                  .find(b => b.id.toString() === a))
+                  .map(a => h('el-tag', {style: 'margin-right:10px'}, a.name)))
             }
           }]
         }, {
@@ -355,12 +355,12 @@ export default {
             render: (h, params) => {
               const { rowData } = params
               return rowData ? rowData.map(a =>
-              h('el-tag', {
-                style: 'margin-right:10px'
-              },
-              `${this.bicycleProviderList
-                .find(b => b.bicycleProviderId.toString() === a.bicycleProviderId.toString()).name}X${a.number}`
-              )) : ''
+                h('el-tag', {
+                  style: 'margin-right:10px'
+                },
+                `${this.bicycleProviderList
+                  .find(b => b.bicycleProviderId.toString() === a.bicycleProviderId.toString()).name}X${a.number}`
+                )) : ''
             }
           }]
         }, {
@@ -431,7 +431,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  
-</style>
