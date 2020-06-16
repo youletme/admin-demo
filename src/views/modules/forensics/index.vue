@@ -43,7 +43,7 @@
       :detailData="detailData"
       :detailFormItems="detailFormItems"
       width="70%"
-      ref="show-detail"
+      ref="forensics-show-detail"
     >
 
     </show-detail>
@@ -250,8 +250,8 @@ export default {
       const { data: detail } = json
       if (detail && detail.code === 0) {
         this.detailData = detail.data
-        this.$refs['show-detail'].dataForm = detail.data
-        this.$refs['show-detail'].visible = true
+        this.$refs['forensics-show-detail'].dataForm = detail.data
+        this.$refs['forensics-show-detail'].visible = true
 
         this.detailFormItems = [{
           colNum: 3,

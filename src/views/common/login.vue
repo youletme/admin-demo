@@ -171,10 +171,10 @@ export default {
       letter-spacing: 10px;
       text-align: center;
       position: absolute;
-      right: 11%;
+      right: 9%;
       top: 18%;
       transform: translateY(-50%);
-      width: 36%;
+      width: 40%;
     }
     .login-captcha {
       overflow: hidden;
