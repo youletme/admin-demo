@@ -141,7 +141,6 @@ export default {
       rowOperate: {
         render: (h, params) => {
           const { rowData } = params
-          console.log(rowData)
 
           return h('div', {
             style: {

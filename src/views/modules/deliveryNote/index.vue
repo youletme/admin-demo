@@ -135,13 +135,12 @@ export default {
         method: 'post',
         params: this.$http.adornParams({id: data.id})
       })
-      console.log(json)
+      
       const { data: detail } = json
       if (detail && detail.code === 0) {
         this.detailData = detail.data
         this.$refs['deliveryNote-show-detail'].dataForm = detail.data
         this.$refs['deliveryNote-show-detail'].visible = true
-        console.log(detail.data)
 
         this.detailFormItems = [{
           colNum: 3,
