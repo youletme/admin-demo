@@ -16,7 +16,7 @@ module.exports = {
       config
         .plugin('html')
         .tap(args => {
-          args[0].title= '海曙区城管综合执法平台'
+          args[0].title= '搭把手管理平台'
           return args
         })
               // 删除默认配置中处理svg
