@@ -3,17 +3,31 @@
     <div class="site-content__wrapper">
       <div class="site-content">
         <div class="login-title">
-          <img :src="require('@/assets/img/logo.png')" style="width:80px;height:80px;" alt="">
-          海曙区城管综合执法平台
+          搭把手登录平台
         </div>
         <div class="login-main">
-
-          <el-form class="login-form" :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" status-icon>
+          <el-form
+            class="login-form"
+            :model="dataForm"
+            :rules="dataRule"
+            ref="dataForm"
+            @keyup.enter.native="dataFormSubmit()"
+            status-icon
+          >
             <el-form-item prop="userName">
-              <el-input prefix-icon='el-icon-s-custom' v-model="dataForm.userName" placeholder="帐号"></el-input>
+              <el-input
+                prefix-icon="el-icon-s-custom"
+                v-model="dataForm.userName"
+                placeholder="帐号"
+              ></el-input>
             </el-form-item>
             <el-form-item prop="password">
-              <el-input prefix-icon='el-icon-lock' v-model="dataForm.password" type="password" placeholder="密码"></el-input>
+              <el-input
+                prefix-icon="el-icon-lock"
+                v-model="dataForm.password"
+                type="password"
+                placeholder="密码"
+              ></el-input>
             </el-form-item>
             <el-form-item prop="captcha">
               <el-row :gutter="20">
@@ -22,12 +36,17 @@
                   </el-input>
                 </el-col>
                 <el-col :span="10" class="login-captcha">
-                  <img :src="captchaPath" @click="getCaptcha()" alt="">
+                  <img :src="captchaPath" @click="getCaptcha()" alt="" />
                 </el-col>
               </el-row>
             </el-form-item>
             <!-- <el-form-item> -->
-              <el-button class="login-btn-submit" type="primary" @click="dataFormSubmit()">登录</el-button>
+            <el-button
+              class="login-btn-submit"
+              type="primary"
+              @click="dataFormSubmit()"
+              >登录</el-button
+            >
             <!-- </el-form-item> -->
           </el-form>
         </div>
@@ -37,168 +56,171 @@
 </template>
 
 <script>
-import { getUUID } from '@/utils'
+import { getUUID } from "@/utils";
 export default {
-  data () {
+  data() {
     return {
       dataForm: {
-        userName: '',
-        password: '',
-        uuid: '',
-        captcha: ''
+        userName: "",
+        password: "",
+        uuid: "",
+        captcha: ""
       },
       dataRule: {
         userName: [
-          { required: true, message: '帐号不能为空', trigger: 'blur' }
+          { required: true, message: "帐号不能为空", trigger: "blur" }
         ],
         password: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
+          { required: true, message: "密码不能为空", trigger: "blur" }
         ],
         captcha: [
-          { required: true, message: '验证码不能为空', trigger: 'blur' }
+          { required: true, message: "验证码不能为空", trigger: "blur" }
         ]
       },
-      captchaPath: ''
-    }
+      captchaPath: ""
+    };
   },
-  created () {
-    this.getCaptcha()
+  created() {
+    this.getCaptcha();
   },
   methods: {
     // 提交表单
-    dataFormSubmit () {
-      this.$refs['dataForm'].validate((valid) => {
+    dataFormSubmit() {
+      this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$http({
-            url: this.$http.adornUrl('/sys/login'),
-            method: 'post',
+            url: this.$http.adornUrl("/sys/login"),
+            method: "post",
             data: this.$http.adornData({
-              'username': this.dataForm.userName,
-              'password': this.dataForm.password,
-              'uuid': this.dataForm.uuid,
-              'captcha': this.dataForm.captcha
+              username: this.dataForm.userName,
+              password: this.dataForm.password,
+              uuid: this.dataForm.uuid,
+              captcha: this.dataForm.captcha
             })
-          }).then(({data}) => {
+          }).then(({ data }) => {
             if (data && data.code === 0) {
-              this.$cookie.set('token', data.token)
-              
-              this.$router.replace({ name: 'home' })
+              this.$cookie.set("token", data.token);
+              this.$router.replace({ name: "home" });
             } else {
-              this.getCaptcha()
-              this.$message.error(data.msg)
+              this.getCaptcha();
+              this.$message.error(data.msg);
             }
-          })
+          });
         }
-      })
+      });
     },
     // 获取验证码
-    getCaptcha () {
-      this.dataForm.uuid = getUUID()
-      this.captchaPath = this.$http.adornUrl(`/captcha.jpg?uuid=${this.dataForm.uuid}`)
+    getCaptcha() {
+      this.dataForm.uuid = getUUID();
+      this.captchaPath = this.$http.adornUrl(
+        `/captcha.jpg?uuid=${this.dataForm.uuid}`
+      );
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
-  .site-wrapper.site-page--login {
+.site-wrapper.site-page--login {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  &:before {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    content: "";
+    background-image: url(~@/assets/img/login_bg.png);
+    background-size: cover;
+  }
+  .site-content__wrapper {
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    overflow: hidden;
-    &:before {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
-      width: 100%;
-      height: 100%;
-      content: "";
-      background-image: url(~@/assets/img/login_bg.png);
-      background-size: cover;
-    }
-    .site-content__wrapper {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      padding: 0;
-      margin: 0;
-      overflow-x: hidden;
-      overflow-y: auto;
-      background-color: transparent;
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: transparent;
 
-      .el-form{
-        .el-form-item{
-          margin-bottom: 26px;
-        }
-
-        .el-input{
-          .el-input__inner{
-            border-radius: 18px;
-          }
-        }
+    .el-form {
+      .el-form-item {
+        margin-bottom: 26px;
       }
-    }
-    .site-content {
-      min-height: 100%;
-    }
-    .brand-info__text {
-      margin:  0 0 22px 0;
-      font-size: 48px;
-      font-weight: 400;
-      text-transform : uppercase;
-    }
-    .brand-info__intro {
-      margin: 10px 0;
-      font-size: 16px;
-      line-height: 1.58;
-      opacity: .6;
-    }
-    .login-main {
-      position: absolute;
-      top: 45%;
-      transform: translateY(-50%);
-      right: 17%;
-      width: 20%;
-    }
-    .login-title {
-      font-size: 34px;
-      font-weight: 500;
-      color: #4382F0;
-      letter-spacing: 10px;
-      text-align: center;
-      position: absolute;
-      right: 9%;
-      top: 18%;
-      transform: translateY(-50%);
-      width: 40%;
-    }
-    .login-captcha {
-      overflow: hidden;
-      > img {
-        width: 100%;
-        cursor: pointer;
-      }
-    }
-    .login-btn-submit {
-      width: 100%;
-      margin-top: 15px;
-      background:linear-gradient(270deg,rgba(82,128,249,1) 0%,rgba(64,52,221,1) 100%);
-      border-radius:37px;
-      height:50px;
-      border-color: rgba(82,128,249,1);
 
-      span{
-        font-family:'PingFang SC';
-        font-size: 16px;
-        font-weight: 600;
-        opacity: 0.87;
-        letter-spacing: 2px;
+      .el-input {
+        .el-input__inner {
+          border-radius: 35px;
+        }
       }
     }
   }
+  .site-content {
+    min-height: 100%;
+  }
+  .brand-info__text {
+    margin: 0 0 22px 0;
+    font-size: 48px;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+  .brand-info__intro {
+    margin: 10px 0;
+    font-size: 16px;
+    line-height: 1.58;
+    opacity: 0.6;
+  }
+  .login-main {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 18%;
+    width: 23%;
+  }
+  .login-title {
+    font-size: 60px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 12px;
+    text-align: center;
+    position: absolute;
+    right: 9%;
+    top: 25%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 40%;
+  }
+  .login-captcha {
+    overflow: hidden;
+    > img {
+      width: 100%;
+      cursor: pointer;
+    }
+  }
+  .login-btn-submit {
+    width: 100%;
+    margin-top: 15px;
+    background: #f1f8ff;
+    border-radius: 37px;
+    height: 50px;
+    border-color: #f1f8ff;
+
+    span {
+      font-family: "PingFang SC";
+      font-size: 16px;
+      font-weight: 600;
+      color: #3d5c9d;
+      // opacity: 0.87;
+      letter-spacing: 2px;
+    }
+  }
+}
 </style>
