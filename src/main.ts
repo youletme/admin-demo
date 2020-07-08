@@ -9,7 +9,7 @@ import "element-ui/lib/theme-chalk/index.css";
 // import '@/element-ui-theme/element-#4382F0/index.css'
 import "@/assets/scss/index.scss";
 import { httpRequest } from "@/utils/httpRequest"; // api: https://github.com/axios/axios
-import { isAuth } from "@/utils/index";
+import { isAuth, selectRender, radioRender } from "@/utils/index";
 import cloneDeep from "lodash/cloneDeep";
 import AMap from "vue-amap";
 
@@ -46,6 +46,8 @@ AMap.initAMapApiLoader({
 // 挂载全局
 Vue.prototype.$http = httpRequest; // ajax请求方法
 Vue.prototype.isAuth = isAuth; // 权限方法
+Vue.prototype.$selectRender = selectRender; // select模板方法
+Vue.prototype.$radioRender = radioRender; //radio模板方法
 
 // 保存整站vuex本地储存初始状态
 window.SITE_CONFIG["storeState"] = cloneDeep(store.state);
