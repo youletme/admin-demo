@@ -12,7 +12,7 @@
         ref="dataForm"
         label-width="80px"
       >
-        <el-row v-for="(a, i) in detailFormItems" :key="i">
+        <el-row v-for="(a, i) in detailFormItems" :style="a.style" :key="i">
           <el-col
             :span="parseInt(24 / a.colNum)"
             v-for="(b, j) in a.cols"
