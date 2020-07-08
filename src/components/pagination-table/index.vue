@@ -1,25 +1,85 @@
 <template>
   <div>
     <div style="margin-bottom:20px">
-      <el-button v-if="isAuth('sys:user:save') && useDefultOperate" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-      <el-button v-if="isAuth('sys:user:delete') && useDefultOperate" type="danger" @click="deleteHandle()" :disabled="!dataListSelections.length">批量删除</el-button>
-      <el-button v-if="isAuth('sys:user:save') && onlyCanSaveAndChange" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+      <el-button
+        v-if="isAuth('sys:user:create') && useDefultOperate"
+        type="primary"
+        @click="addOrUpdateHandle()"
+        >新增</el-button
+      >
+      <el-button
+        v-if="isAuth('sys:user:delete') && useDefultOperate"
+        type="danger"
+        @click="deleteHandle()"
+        :disabled="!dataListSelections.length"
+        >批量删除</el-button
+      >
+      <el-button
+        v-if="isAuth('sys:user:create') && onlyCanSaveAndChange"
+        type="primary"
+        @click="addOrUpdateHandle()"
+        >新增</el-button
+      >
       <slot name="headerOperate"></slot>
     </div>
+
+    <el-form
+      v-if="filterFormItems.length"
+      :model="searchData"
+      ref="filterForm"
+      @keyup.enter.native="getDataList('search')"
+      label-width="80px"
+    >
+      <el-row v-if="filterFormItems.length">
+        <el-col
+          :span="a.colSpan"
+          v-for="(a, i) in filterFormItems"
+          :key="`col${i}`"
+        >
+          <el-form-item :label="a.label" :prop="a.prop">
+            <render-slot
+              v-if="a.slotFormItem"
+              :render="a.slotFormItem.render"
+              :rowData="searchData[a.prop]"
+            ></render-slot>
+            <el-input
+              v-else
+              v-model="searchData[a.prop]"
+              :placeholder="`请输入${a.label}`"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5" style="padding-left:20px">
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            @click="getDataList('search')"
+          >
+            搜索
+          </el-button>
+          <el-button icon="el-icon-refresh-right" @click="restSearchData()"
+            >重置</el-button
+          >
+        </el-col>
+      </el-row>
+    </el-form>
     <el-table
       :data="dataList"
       border
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;"
-      >
+    >
       <el-table-column
         type="selection"
         header-align="center"
         align="center"
-        width="50">
+        width="50"
+      >
       </el-table-column>
-      <el-table-column v-for="(a,i) in tableColumns.filter(a => !a.notIntable)" :key="i"
+      <el-table-column
+        v-for="(a, i) in tableColumns.filter(a => !a.notIntable)"
+        :key="i"
         :prop="a.prop"
         :header-align="a.headerAlign"
         :align="a.align"
@@ -27,7 +87,11 @@
         :label="a.label"
       >
         <template slot-scope="scope">
-          <render-slot v-if="a.render" :render="a.render" :rowData="scope.row"></render-slot>
+          <render-slot
+            v-if="a.render"
+            :render="a.render"
+            :rowData="scope.row"
+          ></render-slot>
           <span v-else>{{ scope.row[a.prop] }}</span>
         </template>
       </el-table-column>
@@ -39,14 +103,42 @@
         label="操作"
       >
         <template slot-scope="scope">
-          <render-slot v-if="rowOperate" :render="rowOperate.render" :rowData="scope.row"></render-slot>
+          <render-slot
+            v-if="rowOperate"
+            :render="rowOperate.render"
+            :rowData="scope.row"
+          ></render-slot>
 
-          <el-button v-if="isAuth('sys:user:update')&&useDefultOperate" type="text" size="small" @click="addOrUpdateHandle(scope.row[rowIdName])">修改</el-button>
-          <el-button v-if="isAuth('sys:user:delete')&&useDefultOperate" type="text" size="small" @click="deleteHandle(scope.row[rowIdName])">删除</el-button>
-          <el-button v-if="isAuth('sys:user:update')&&onlyCanSaveAndChange" type="text" size="small" @click="addOrUpdateHandle(scope.row[rowIdName])">修改</el-button>
+          <el-button
+            v-if="isAuth('sys:user:save') && useDefultOperate"
+            type="text"
+            size="small"
+            @click="addOrUpdateHandle(scope.row[rowIdName])"
+            >修改</el-button
+          >
+          <el-button
+            v-if="isAuth('sys:user:delete') && useDefultOperate"
+            type="text"
+            size="small"
+            @click="deleteHandle(scope.row[rowIdName])"
+            >删除</el-button
+          >
+          <el-button
+            v-if="isAuth('sys:user:save') && onlyCanSaveAndChange"
+            type="text"
+            size="small"
+            @click="addOrUpdateHandle(scope.row[rowIdName])"
+            >修改</el-button
+          >
+          <el-button
+            v-if="isAuth('sys:user:save') && onlyCanChange"
+            type="text"
+            size="small"
+            @click="addOrUpdateHandle(scope.row[rowIdName])"
+            >修改</el-button
+          >
         </template>
       </el-table-column>
-
     </el-table>
     <el-pagination
       @size-change="sizeChangeHandle"
@@ -55,7 +147,8 @@
       :page-sizes="[10, 20, 50, 100]"
       :page-size="pageSize"
       :total="totalCount"
-      layout="total, sizes, prev, pager, next, jumper">
+      layout="total, sizes, prev, pager, next, jumper"
+    >
     </el-pagination>
 
     <add-or-update
@@ -68,34 +161,44 @@
       :width="addOrUpdateDialogWidth"
       @initCallBack="initCallBack"
     ></add-or-update>
-
   </div>
 </template>
 
 <script>
-import RenderSlot from '../renderSlot'
-import AddOrUpdate from '../add-or-update'
+import RenderSlot from "../renderSlot";
+import AddOrUpdate from "../add-or-update";
 export default {
   props: {
     tableColumns: {
       type: Array,
       default: () => {
-        return [{
-          prop: '',
-          headerAlign: '',
-          align: '',
-          width: '',
-          label: '',
-          slot: false
-        }]
+        return [
+          {
+            prop: "",
+            headerAlign: "",
+            align: "",
+            width: "",
+            label: "",
+            slot: false
+          }
+        ];
       }
     },
-    searchData: Object,
+    filterFormItems: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    },
     getListUrl: String,
     deleteUrl: String,
     useDefultOperate: {
       type: Boolean,
       default: true
+    },
+    onlyCanChange: {
+      type: Boolean,
+      default: false
     },
     onlyCanSaveAndChange: {
       type: Boolean,
@@ -106,12 +209,12 @@ export default {
     },
     addOrUpdateDialogWidth: {
       type: String,
-      default: '50%'
+      default: "50%"
     },
     getFormDateUrl: String,
     saveOrUpdateUrl: String
   },
-  data () {
+  data() {
     return {
       addOrUpdateVisible: false,
       dataList: [],
@@ -121,112 +224,139 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       formItems: [],
-      rowIdName: ''
-    }
+      rowIdName: "",
+      searchData: {}
+    };
   },
   components: {
     RenderSlot,
     AddOrUpdate
   },
-  created () {
-    this.formItems = this.tableColumns.filter(a => !a.notInForm).map(a => ({
-      label: a.label,
-      prop: a.prop,
-      slotFormItem: a.slotFormItem
-    }))
+  created() {
+    this.formItems = this.tableColumns
+      .filter(a => !a.notInForm)
+      .map(a => ({
+        label: a.label,
+        prop: a.prop,
+        slotFormItem: a.slotFormItem
+      }));
 
-    if (this.tableColumns.find(a => a.label === 'ID')) {
-      this.rowIdName = this.tableColumns.find(a => a.label === 'ID').prop
+    if (this.tableColumns.find(a => a.label === "ID")) {
+      this.rowIdName = this.tableColumns.find(a => a.label === "ID").prop;
     } else {
-      console.log('tableColumn must has ID for label')
+      console.log("tableColumn must has ID for label");
+    }
+
+    if (this.filterFormItems?.[0]?.prop) {
+      this.searchData = this.filterFormItems.reduce(
+        (a, b) => ({ ...a, ...{ [b.prop]: "" } }),
+        {}
+      );
     }
   },
-  activated () {
-    this.getDataList()
+  activated() {
+    this.getDataList();
   },
   methods: {
     // 获取数据列表
-    getDataList () {
-      this.dataListLoading = true
+    getDataList(type) {
+      if (type === "search") {
+        this.pageIndex = 1;
+      }
+
+      this.dataListLoading = true;
       this.$http({
         url: this.$http.adornUrl(this.getListUrl),
-        method: 'get',
-        params: this.$http.adornParams({
+        method: "post",
+        data: this.$http.adornData({
           ...{
-            'page': this.pageIndex,
-            'limit': this.pageSize
+            page: this.pageIndex,
+            limit: this.pageSize
           },
           ...this.searchData
         })
-      }).then(({data}) => {
+      }).then(({ data }) => {
         if (data && data.code === 0) {
-          const { data: json } = data
-          const { records, total } = json
+          const { data: json } = data;
+          const { list, totalCount } = json;
 
-          this.dataList = records
-          this.totalCount = total
+          this.dataList = list;
+          this.totalCount = totalCount;
         } else {
-          this.dataList = []
-          this.totalCount = 0
+          this.dataList = [];
+          this.totalCount = 0;
         }
-        this.dataListLoading = false
-      })
+        this.dataListLoading = false;
+      });
     },
     // 每页数
-    sizeChangeHandle (val) {
-      this.pageSize = val
-      this.pageIndex = 1
-      this.getDataList()
+    sizeChangeHandle(val) {
+      this.pageSize = val;
+      this.pageIndex = 1;
+      this.getDataList();
     },
     // 当前页
-    currentChangeHandle (val) {
-      this.pageIndex = val
-      this.getDataList()
+    currentChangeHandle(val) {
+      this.pageIndex = val;
+      this.getDataList();
     },
     // 多选
-    selectionChangeHandle (val) {
-      this.dataListSelections = val
+    selectionChangeHandle(val) {
+      this.dataListSelections = val;
     },
     // 新增 / 修改
-    addOrUpdateHandle (id) {
-      this.addOrUpdateVisible = true
+    addOrUpdateHandle(id) {
+      this.addOrUpdateVisible = true;
       this.$nextTick(() => {
-        this.$refs.addOrUpdate.init(id)
-      })
+        this.$refs.addOrUpdate.init(id);
+      });
     },
     // 删除
-    deleteHandle (id) {
-      let ids = id ? [id] : this.dataListSelections.map(item => {
-        return item.userId
-      })
-      this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http({
-          url: this.$http.adornUrl(this.deleteUrl),
-          method: 'post',
-          data: this.$http.adornData(ids, false)
-        }).then(({data}) => {
-          if (data && data.code === 0) {
-            this.$message({
-              message: '操作成功',
-              type: 'success',
-              duration: 1500,
-              onClose: () => {
-                this.getDataList()
-              }
-            })
-          } else {
-            this.$message.error(data.msg)
-          }
+    deleteHandle(id) {
+      const ids = id
+        ? [id]
+        : this.dataListSelections.map(item => {
+            return item.userId;
+          });
+      this.$confirm(
+        `确定对[id=${ids.join(",")}]进行[${id ? "删除" : "批量删除"}]操作?`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          this.$http({
+            url: this.$http.adornUrl(this.deleteUrl),
+            method: "post",
+            data: this.$http.adornData(ids, false)
+          }).then(({ data }) => {
+            if (data && data.code === 0) {
+              this.$message({
+                message: "操作成功",
+                type: "success",
+                duration: 1500,
+                onClose: () => {
+                  this.getDataList();
+                }
+              });
+            } else {
+              this.$message.error(data.msg);
+            }
+          });
         })
-      }).catch(() => {})
+        .catch(e => {
+          console.log(e);
+        });
     },
-    initCallBack (a) {
-      this.$emit('initCallBack', a)
+    initCallBack(a) {
+      this.$emit("initCallBack", a);
+    },
+    restSearchData() {
+      this.$refs["filterForm"].resetFields();
     }
   }
-}
+};
 </script>
