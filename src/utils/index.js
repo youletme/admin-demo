@@ -56,3 +56,39 @@ export function clearLoginInfo () {
   store.commit('resetStore')
   router.options.isAddDynamicMenuRoutes = false
 }
+
+export function selectRender(h, value, option, inputCallBack) {
+  return (
+    <el-select
+      value={value}
+      onInput={e => {
+        inputCallBack(e);
+      }}
+    >
+      {Object.keys(option)
+        .filter(key => isNaN(Number(option[key])))
+        .map((a, i) => (
+          <el-option label={option[a]} value={parseInt(a)} key={i}></el-option>
+        ))}
+    </el-select>
+  );
+}
+
+export function radioRender(h, value, option, inputCallBack) {
+  return (
+    <el-radio-group
+      value={value}
+      onInput={e => {
+        inputCallBack(e);
+      }}
+    >
+      {Object.keys(option)
+        .filter(key => isNaN(Number(option[key])))
+        .map((a, i) => (
+          <el-radio label={parseInt(a)} key={i}>
+            {option[a]}
+          </el-radio>
+        ))}
+    </el-radio-group>
+  );
+}
