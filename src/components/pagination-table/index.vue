@@ -197,7 +197,7 @@ export default {
     },
     getListUrl: String,
     deleteUrl: String,
-    useDefultOperate: {
+    useDefaultOperate: {
       type: Boolean,
       default: true
     },

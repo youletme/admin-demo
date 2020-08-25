@@ -1,8 +1,8 @@
 <template>
   <div>
     <div style="margin-bottom:20px">
-      <el-button v-if="isAuth('sys:user:save') && useDefultOperate" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-      <el-button v-if="isAuth('sys:user:delete') && useDefultOperate" type="danger" @click="deleteHandle()" :disabled="!dataListSelections.length">批量删除</el-button>
+      <el-button v-if="isAuth('sys:user:save') && useDefaultOperate" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+      <el-button v-if="isAuth('sys:user:delete') && useDefaultOperate" type="danger" @click="deleteHandle()" :disabled="!dataListSelections.length">批量删除</el-button>
       <el-button v-if="isAuth('sys:user:save') && onlyCanSaveAndChange" type="primary" @click="addOrUpdateHandle()">新增</el-button>
       <slot name="headerOperate"></slot>
     </div>
@@ -41,8 +41,8 @@
         <template slot-scope="scope">
           <render-slot v-if="rowOperate" :render="rowOperate.render" :rowData="scope.row"></render-slot>
 
-          <el-button v-if="isAuth('sys:user:update')&&useDefultOperate" type="text" size="small" @click="addOrUpdateHandle(scope.row[rowIdName])">修改</el-button>
-          <el-button v-if="isAuth('sys:user:delete')&&useDefultOperate" type="text" size="small" @click="deleteHandle(scope.row[rowIdName])">删除</el-button>
+          <el-button v-if="isAuth('sys:user:update')&&useDefaultOperate" type="text" size="small" @click="addOrUpdateHandle(scope.row[rowIdName])">修改</el-button>
+          <el-button v-if="isAuth('sys:user:delete')&&useDefaultOperate" type="text" size="small" @click="deleteHandle(scope.row[rowIdName])">删除</el-button>
           <el-button v-if="isAuth('sys:user:update')&&onlyCanSaveAndChange" type="text" size="small" @click="addOrUpdateHandle(scope.row[rowIdName])">修改</el-button>
         </template>
       </el-table-column>
@@ -93,7 +93,7 @@ export default {
     searchData: Object,
     getListUrl: String,
     deleteUrl: String,
-    useDefultOperate: {
+    useDefaultOperate: {
       type: Boolean,
       default: true
     },

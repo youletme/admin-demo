@@ -5,7 +5,7 @@
       :table-columns="tableColumns"
       :get-list-url="'/sys/bicycleProvider/list'"
       :delete-url="'/sys/user/delete'"
-      :useDefultOperate="false"
+      :useDefaultOperate="false"
       :addOrUpdateDialogWidth="'30%'"
       :saveOrUpdateUrl="'/sys/bicycleProvider'"
       :getFormDateUrl="'/sys/bicycleProvider/view'"

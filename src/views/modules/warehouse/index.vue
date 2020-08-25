@@ -7,7 +7,7 @@
       :delete-url="''"
       :saveOrUpdateUrl="'/sys/warehouse'"
       :getFormDateUrl="'/sys/warehouse/view'"
-      :useDefultOperate="false"
+      :useDefaultOperate="false"
       :addOrUpdateDialogWidth="'30%'"
       :onlyCanSaveAndChange="true"
     >

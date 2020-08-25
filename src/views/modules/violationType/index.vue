@@ -6,7 +6,7 @@
       :get-list-url="'/sys/violationCategory/list'"
       :saveOrUpdateUrl="'/sys/violationCategory'"
       :getFormDateUrl="'/sys/violationCategory/view'"
-      :useDefultOperate="false"
+      :useDefaultOperate="false"
       :addOrUpdateDialogWidth="'40%'"
       :onlyCanSaveAndChange="true"
     >
