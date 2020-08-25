@@ -5,7 +5,7 @@
       :table-columns='tableColumns'
       :get-list-url="'/sys/deliver/list'"
       :delete-url="'/sys/user/delete'"
-      :useDefultOperate="false"
+      :useDefaultOperate="false"
       :addOrUpdateDialogWidth="'30%'"
       :onlyCanSaveAndChange="false"
       :rowOperate="rowOperate"

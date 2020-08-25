@@ -6,7 +6,7 @@
       :get-list-url="'/sys/businessUser/list'"
       :saveOrUpdateUrl="'/sys/businessUser'"
       :getFormDateUrl="'/sys/businessUser/view'"
-      :useDefultOperate="false"
+      :useDefaultOperate="false"
       :addOrUpdateDialogWidth="'40%'"
       :onlyCanSaveAndChange="true"
       @initCallBack="initCallBack"

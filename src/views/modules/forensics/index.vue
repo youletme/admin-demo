@@ -6,7 +6,7 @@
       :search-data='dataForm'
       :get-list-url="'/sys/evidence/list'"
       :delete-url="'/sys/user/delete'"
-      :useDefultOperate="false"
+      :useDefaultOperate="false"
       :rowOperate="rowOperate"
     >
 
