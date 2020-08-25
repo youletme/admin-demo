@@ -8,7 +8,7 @@
       :useDefaultOperate="false"
       :addOrUpdateDialogWidth="'30%'"
       :saveOrUpdateUrl="'/sys/bicycleProvider'"
-      :getFormDateUrl="'/sys/bicycleProvider/view'"
+      :getFormDataUrl="'/sys/bicycleProvider/view'"
       :onlyCanSaveAndChange="true"
     >
     </pagination-table>
