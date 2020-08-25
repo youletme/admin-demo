@@ -1,14 +1,59 @@
 <template>
   <div>
+    <el-form
+      v-if="filterFormItems.length"
+      class="filter-form"
+      :model="searchData"
+      ref="filterForm"
+      @submit.native.prevent
+      @keyup.enter.native="getDataList('search')"
+      label-width="80px"
+    >
+      <div v-if="filterFormItems.length">
+        <el-row v-for="(a, i) in filterFormItems" :key="i" :gutter="10">
+          <el-col :span="b.colSpan" v-for="(b, j) in a" :key="`col${i}${j}`">
+            <el-form-item :label="b.label" :prop="b.prop">
+              <render-slot
+                v-if="b.slotFormItem"
+                :render="b.slotFormItem.render"
+                :rowData="searchData[b.prop]"
+              ></render-slot>
+              <el-input
+                v-else
+                v-model="searchData[b.prop]"
+                :placeholder="`请输入${b.label}`"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col
+            :span="5"
+            style="padding-left:20px"
+            v-if="i === filterFormItems.length - 1"
+          >
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              @click="getDataList('search')"
+            >
+              搜索
+            </el-button>
+            <el-button icon="el-icon-refresh-right" @click="restSearchData()"
+              >重置</el-button
+            >
+          </el-col>
+        </el-row>
+      </div>
+    </el-form>
+
     <div style="margin-bottom:20px">
       <el-button
-        v-if="isAuth('sys:user:create') && useDefultOperate"
+        v-if="isAuth('sys:user:create') && useDefaultOperate"
         type="primary"
         @click="addOrUpdateHandle()"
         >新增</el-button
       >
       <el-button
-        v-if="isAuth('sys:user:delete') && useDefultOperate"
+        v-if="isAuth('sys:user:delete') && useDefaultOperate"
         type="danger"
         @click="deleteHandle()"
         :disabled="!dataListSelections.length"
@@ -23,46 +68,6 @@
       <slot name="headerOperate"></slot>
     </div>
 
-    <el-form
-      v-if="filterFormItems.length"
-      :model="searchData"
-      ref="filterForm"
-      @keyup.enter.native="getDataList('search')"
-      label-width="80px"
-    >
-      <el-row v-if="filterFormItems.length">
-        <el-col
-          :span="a.colSpan"
-          v-for="(a, i) in filterFormItems"
-          :key="`col${i}`"
-        >
-          <el-form-item :label="a.label" :prop="a.prop">
-            <render-slot
-              v-if="a.slotFormItem"
-              :render="a.slotFormItem.render"
-              :rowData="searchData[a.prop]"
-            ></render-slot>
-            <el-input
-              v-else
-              v-model="searchData[a.prop]"
-              :placeholder="`请输入${a.label}`"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5" style="padding-left:20px">
-          <el-button
-            type="primary"
-            icon="el-icon-search"
-            @click="getDataList('search')"
-          >
-            搜索
-          </el-button>
-          <el-button icon="el-icon-refresh-right" @click="restSearchData()"
-            >重置</el-button
-          >
-        </el-col>
-      </el-row>
-    </el-form>
     <el-table
       :data="dataList"
       border
@@ -78,7 +83,7 @@
       >
       </el-table-column>
       <el-table-column
-        v-for="(a, i) in tableColumns.filter(a => !a.notIntable)"
+        v-for="(a, i) in tableColumns.filter(a => !a.notInTable)"
         :key="i"
         :prop="a.prop"
         :header-align="a.headerAlign"
@@ -117,7 +122,7 @@
             >修改</el-button
           >
           <el-button
-            v-if="isAuth('sys:user:delete') && useDefultOperate"
+            v-if="isAuth('sys:user:delete') && useDefaultOperate"
             type="text"
             size="small"
             @click="deleteHandle(scope.row[rowIdName])"
