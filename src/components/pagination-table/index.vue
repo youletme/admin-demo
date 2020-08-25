@@ -1,27 +1,73 @@
 <template>
   <div>
+    <el-form
+      v-if="filterFormItems.length"
+      class="filter-form"
+      :model="searchData"
+      ref="filterForm"
+      @submit.native.prevent
+      @keyup.enter.native="getDataList('search')"
+      label-width="80px"
+    >
+      <div v-if="filterFormItems.length">
+        <el-row v-for="(a, i) in filterFormItems" :key="i" :gutter="10">
+          <el-col :span="b.colSpan" v-for="(b, j) in a" :key="`col${i}${j}`">
+            <el-form-item :label="b.label" :prop="b.prop">
+              <render-slot
+                v-if="b.slotFormItem"
+                :render="b.slotFormItem.render"
+                :rowData="searchData[b.prop]"
+              ></render-slot>
+              <el-input
+                v-else
+                v-model="searchData[b.prop]"
+                :placeholder="`请输入${b.label}`"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col
+            :span="5"
+            style="padding-left:20px"
+            v-if="i === filterFormItems.length - 1"
+          >
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              @click="getDataList('search')"
+            >
+              搜索
+            </el-button>
+            <el-button icon="el-icon-refresh-right" @click="restSearchData()"
+              >重置</el-button
+            >
+          </el-col>
+        </el-row>
+      </div>
+    </el-form>
+
     <div style="margin-bottom:20px">
       <el-button
-        v-if="isAuth('sys:user:save') && useDefultOperate"
+        v-if="isAuth('sys:user:create') && useDefaultOperate"
         type="primary"
         @click="addOrUpdateHandle()"
         >新增</el-button
       >
       <el-button
-        v-if="isAuth('sys:user:delete') && useDefultOperate"
+        v-if="isAuth('sys:user:delete') && useDefaultOperate"
         type="danger"
         @click="deleteHandle()"
         :disabled="!dataListSelections.length"
         >批量删除</el-button
       >
       <el-button
-        v-if="isAuth('sys:user:save') && onlyCanSaveAndChange"
+        v-if="isAuth('sys:user:create') && onlyCanSaveAndChange"
         type="primary"
         @click="addOrUpdateHandle()"
         >新增</el-button
       >
       <slot name="headerOperate"></slot>
     </div>
+
     <el-table
       :data="dataList"
       border
@@ -37,7 +83,7 @@
       >
       </el-table-column>
       <el-table-column
-        v-for="(a, i) in tableColumns.filter(a => !a.notIntable)"
+        v-for="(a, i) in tableColumns.filter(a => !a.notInTable)"
         :key="i"
         :prop="a.prop"
         :header-align="a.headerAlign"
@@ -69,21 +115,28 @@
           ></render-slot>
 
           <el-button
-            v-if="isAuth('sys:user:update') && useDefultOperate"
+            v-if="isAuth('sys:user:save') && useDefaultOperate"
             type="text"
             size="small"
             @click="addOrUpdateHandle(scope.row[rowIdName])"
             >修改</el-button
           >
           <el-button
-            v-if="isAuth('sys:user:delete') && useDefultOperate"
+            v-if="isAuth('sys:user:delete') && useDefaultOperate"
             type="text"
             size="small"
             @click="deleteHandle(scope.row[rowIdName])"
             >删除</el-button
           >
           <el-button
-            v-if="isAuth('sys:user:update') && onlyCanSaveAndChange"
+            v-if="isAuth('sys:user:save') && onlyCanSaveAndChange"
+            type="text"
+            size="small"
+            @click="addOrUpdateHandle(scope.row[rowIdName])"
+            >修改</el-button
+          >
+          <el-button
+            v-if="isAuth('sys:user:save') && onlyCanChange"
             type="text"
             size="small"
             @click="addOrUpdateHandle(scope.row[rowIdName])"
@@ -136,12 +189,21 @@ export default {
         ];
       }
     },
-    searchData: Object,
+    filterFormItems: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    },
     getListUrl: String,
     deleteUrl: String,
     useDefultOperate: {
       type: Boolean,
       default: true
+    },
+    onlyCanChange: {
+      type: Boolean,
+      default: false
     },
     onlyCanSaveAndChange: {
       type: Boolean,
@@ -167,7 +229,8 @@ export default {
       dataListLoading: false,
       dataListSelections: [],
       formItems: [],
-      rowIdName: ""
+      rowIdName: "",
+      searchData: {}
     };
   },
   components: {
@@ -188,18 +251,29 @@ export default {
     } else {
       console.log("tableColumn must has ID for label");
     }
+
+    if (this.filterFormItems?.[0]?.prop) {
+      this.searchData = this.filterFormItems.reduce(
+        (a, b) => ({ ...a, ...{ [b.prop]: "" } }),
+        {}
+      );
+    }
   },
   activated() {
     this.getDataList();
   },
   methods: {
     // 获取数据列表
-    getDataList() {
+    getDataList(type) {
+      if (type === "search") {
+        this.pageIndex = 1;
+      }
+
       this.dataListLoading = true;
       this.$http({
         url: this.$http.adornUrl(this.getListUrl),
-        method: "get",
-        params: this.$http.adornParams({
+        method: "post",
+        data: this.$http.adornData({
           ...{
             page: this.pageIndex,
             limit: this.pageSize
@@ -209,10 +283,10 @@ export default {
       }).then(({ data }) => {
         if (data && data.code === 0) {
           const { data: json } = data;
-          const { records, total } = json;
+          const { list, totalCount } = json;
 
-          this.dataList = records;
-          this.totalCount = total;
+          this.dataList = list;
+          this.totalCount = totalCount;
         } else {
           this.dataList = [];
           this.totalCount = 0;
@@ -284,6 +358,9 @@ export default {
     },
     initCallBack(a) {
       this.$emit("initCallBack", a);
+    },
+    restSearchData() {
+      this.$refs["filterForm"].resetFields();
     }
   }
 };
