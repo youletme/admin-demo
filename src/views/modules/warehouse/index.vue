@@ -6,7 +6,7 @@
       :get-list-url="'/sys/warehouse/list'"
       :delete-url="''"
       :saveOrUpdateUrl="'/sys/warehouse'"
-      :getFormDateUrl="'/sys/warehouse/view'"
+      :getFormDataUrl="'/sys/warehouse/view'"
       :useDefaultOperate="false"
       :addOrUpdateDialogWidth="'30%'"
       :onlyCanSaveAndChange="true"

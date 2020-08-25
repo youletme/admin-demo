@@ -5,7 +5,7 @@
       :table-columns='tableColumns'
       :get-list-url="'/sys/businessUser/list'"
       :saveOrUpdateUrl="'/sys/businessUser'"
-      :getFormDateUrl="'/sys/businessUser/view'"
+      :getFormDataUrl="'/sys/businessUser/view'"
       :useDefaultOperate="false"
       :addOrUpdateDialogWidth="'40%'"
       :onlyCanSaveAndChange="true"

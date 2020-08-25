@@ -5,7 +5,7 @@
       :table-columns='tableColumns'
       :get-list-url="'/sys/violationCategory/list'"
       :saveOrUpdateUrl="'/sys/violationCategory'"
-      :getFormDateUrl="'/sys/violationCategory/view'"
+      :getFormDataUrl="'/sys/violationCategory/view'"
       :useDefaultOperate="false"
       :addOrUpdateDialogWidth="'40%'"
       :onlyCanSaveAndChange="true"
