@@ -115,7 +115,7 @@
           ></render-slot>
 
           <el-button
-            v-if="isAuth('sys:user:save') && useDefultOperate"
+            v-if="isAuth('sys:user:save') && useDefaultOperate"
             type="text"
             size="small"
             @click="addOrUpdateHandle(scope.row[rowIdName])"
@@ -197,7 +197,7 @@ export default {
     },
     getListUrl: String,
     deleteUrl: String,
-    useDefultOperate: {
+    useDefaultOperate: {
       type: Boolean,
       default: true,
     },
