@@ -24,7 +24,7 @@ export default {
   props: {
     formItems: Array,
     saveOrUpdateUrl: String,
-    getFormDateUrl: String,
+    getFormDataUrl: String,
     width: {
       type: String,
       default: '50%'
@@ -56,7 +56,7 @@ export default {
 
       if (this.dataForm.id) {
         let json = await this.$http({
-          url: this.$http.adornUrl(`${this.getFormDateUrl}`),
+          url: this.$http.adornUrl(`${this.getFormDataUrl}`),
           method: 'post',
           params: this.$http.adornParams({id: this.dataForm.id})
         })
