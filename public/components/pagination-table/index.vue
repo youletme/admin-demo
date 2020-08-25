@@ -63,7 +63,7 @@
       ref="addOrUpdate"
       @refreshDataList="getDataList"
       :formItems="formItems"
-      :getFormDateUrl="getFormDateUrl"
+      :getFormDataUrl="getFormDataUrl"
       :saveOrUpdateUrl="saveOrUpdateUrl"
       :width="addOrUpdateDialogWidth"
       @initCallBack="initCallBack"
@@ -108,7 +108,7 @@ export default {
       type: String,
       default: '50%'
     },
-    getFormDateUrl: String,
+    getFormDataUrl: String,
     saveOrUpdateUrl: String
   },
   data () {
