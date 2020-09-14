@@ -82,8 +82,15 @@
         width="50"
       >
       </el-table-column>
+
+      <el-table-column v-if="expandRender" type="expand">
+        <template slot-scope="props">
+          <render-slot :render="expandRender" :rowData="props"></render-slot>
+        </template>
+      </el-table-column>
+
       <el-table-column
-        v-for="(a, i) in tableColumns.filter((a) => !a.notInTable)"
+        v-for="(a, i) in tableColumns.filter(a => !a.notInTable)"
         :key="i"
         :prop="a.prop"
         :header-align="a.headerAlign"
@@ -161,10 +168,12 @@
       ref="addOrUpdate"
       @refreshDataList="getDataList"
       :formItems="formItems"
+      :dataFormRule="dataFormRule"
       :getFormDataUrl="getFormDataUrl"
       :saveOrUpdateUrl="saveOrUpdateUrl"
       :width="addOrUpdateDialogWidth"
       @initCallBack="initCallBack"
+      @beforeDataFormSubmit="beforeDataFormSubmit"
     ></add-or-update>
   </div>
 </template>
@@ -184,40 +193,44 @@ export default {
             align: "",
             width: "",
             label: "",
-            slot: false,
-          },
+            slot: false
+          }
         ];
-      },
+      }
+    },
+    addOrUpdateRule: Object,
+    expandRender: {
+      type: null
     },
     filterFormItems: {
       type: Array,
       default: () => {
         return [];
-      },
+      }
     },
     getListUrl: String,
     deleteUrl: String,
     useDefaultOperate: {
       type: Boolean,
-      default: true,
+      default: true
     },
     onlyCanChange: {
       type: Boolean,
-      default: false,
+      default: false
     },
     onlyCanSaveAndChange: {
       type: Boolean,
-      default: false,
+      default: false
     },
     rowOperate: {
-      type: null,
+      type: null
     },
     addOrUpdateDialogWidth: {
       type: String,
-      default: "50%",
+      default: "50%"
     },
     getFormDataUrl: String,
-    saveOrUpdateUrl: String,
+    saveOrUpdateUrl: String
   },
   data() {
     return {
@@ -231,23 +244,24 @@ export default {
       formItems: [],
       rowIdName: "",
       searchData: {},
+      dataFormRule: this.addOrUpdateRule || {}
     };
   },
   components: {
     RenderSlot,
-    AddOrUpdate,
+    AddOrUpdate
   },
   created() {
     this.formItems = this.tableColumns
-      .filter((a) => !a.notInForm)
-      .map((a) => ({
+      .filter(a => !a.notInForm)
+      .map(a => ({
         label: a.label,
         prop: a.prop,
-        slotFormItem: a.slotFormItem,
+        slotFormItem: a.slotFormItem
       }));
 
-    if (this.tableColumns.find((a) => a.label === "ID")) {
-      this.rowIdName = this.tableColumns.find((a) => a.label === "ID").prop;
+    if (this.tableColumns.find(a => a.label === "ID")) {
+      this.rowIdName = this.tableColumns.find(a => a.label === "ID").prop;
     } else {
       console.log("tableColumn must has ID for label");
     }
@@ -276,10 +290,10 @@ export default {
         data: this.$http.adornData({
           ...{
             page: this.pageIndex,
-            limit: this.pageSize,
+            limit: this.pageSize
           },
-          ...this.searchData,
-        }),
+          ...this.searchData
+        })
       }).then(({ data }) => {
         if (data && data.code === 0) {
           const { data: json } = data;
@@ -320,7 +334,7 @@ export default {
     deleteHandle(id) {
       const ids = id
         ? [id]
-        : this.dataListSelections.map((item) => {
+        : this.dataListSelections.map(item => {
             return item.userId;
           });
       this.$confirm(
@@ -329,14 +343,14 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "warning",
+          type: "warning"
         }
       )
         .then(() => {
           this.$http({
             url: this.$http.adornUrl(this.deleteUrl),
             method: "post",
-            data: this.$http.adornData(ids, false),
+            data: this.$http.adornData(ids, false)
           }).then(({ data }) => {
             if (data && data.code === 0) {
               this.$message({
@@ -345,23 +359,26 @@ export default {
                 duration: 1500,
                 onClose: () => {
                   this.getDataList();
-                },
+                }
               });
             } else {
               this.$message.error(data.msg);
             }
           });
         })
-        .catch((e) => {
+        .catch(e => {
           console.log(e);
         });
     },
     initCallBack(a) {
       this.$emit("initCallBack", a);
     },
+    beforeDataFormSubmit(a) {
+      this.$emit("beforeDataFormSubmit", a);
+    },
     restSearchData() {
       this.$refs["filterForm"].resetFields();
-    },
-  },
+    }
+  }
 };
 </script>
