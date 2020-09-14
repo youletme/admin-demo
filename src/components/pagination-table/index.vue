@@ -82,6 +82,13 @@
         width="50"
       >
       </el-table-column>
+
+      <el-table-column v-if="expandRender" type="expand">
+        <template slot-scope="props">
+          <render-slot :render="expandRender" :rowData="props"></render-slot>
+        </template>
+      </el-table-column>
+
       <el-table-column
         v-for="(a, i) in tableColumns.filter(a => !a.notInTable)"
         :key="i"
@@ -161,10 +168,12 @@
       ref="addOrUpdate"
       @refreshDataList="getDataList"
       :formItems="formItems"
+      :dataFormRule="dataFormRule"
       :getFormDataUrl="getFormDataUrl"
       :saveOrUpdateUrl="saveOrUpdateUrl"
       :width="addOrUpdateDialogWidth"
       @initCallBack="initCallBack"
+      @beforeDataFormSubmit="beforeDataFormSubmit"
     ></add-or-update>
   </div>
 </template>
@@ -188,6 +197,10 @@ export default {
           }
         ];
       }
+    },
+    addOrUpdateRule: Object,
+    expandRender: {
+      type: null
     },
     filterFormItems: {
       type: Array,
@@ -230,7 +243,8 @@ export default {
       dataListSelections: [],
       formItems: [],
       rowIdName: "",
-      searchData: {}
+      searchData: {},
+      dataFormRule: this.addOrUpdateRule || {}
     };
   },
   components: {
@@ -358,6 +372,9 @@ export default {
     },
     initCallBack(a) {
       this.$emit("initCallBack", a);
+    },
+    beforeDataFormSubmit(a) {
+      this.$emit("beforeDataFormSubmit", a);
     },
     restSearchData() {
       this.$refs["filterForm"].resetFields();

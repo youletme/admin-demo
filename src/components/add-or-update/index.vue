@@ -9,6 +9,8 @@
       :model="dataForm"
       class="add-or-update-form"
       ref="dataForm"
+      :rules="dataFormRule"
+      @submit.native.prevent
       @keyup.enter.native="dataFormSubmit()"
       label-width="80px"
     >
@@ -44,6 +46,7 @@ export default {
     formItems: Array,
     saveOrUpdateUrl: String,
     getFormDataUrl: String,
+    dataFormRule: Object,
     width: {
       type: String,
       default: "50%"
@@ -86,12 +89,12 @@ export default {
         }
       }
 
-      if (this.$emit("initCallBack")) {
-        this.$emit("initCallBack", this.dataForm);
-      }
+      this.$emit("initCallBack", this.dataForm);
     },
     // 表单提交
     dataFormSubmit() {
+      this.$emit("beforeDataFormSubmit", this.dataForm);
+
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$http({
